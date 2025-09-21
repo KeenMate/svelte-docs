@@ -1,0 +1,72 @@
+{
+	"name": "@keenmate/svelte-docs",
+	"description": "A professional component library for building beautiful documentation and showcase sites with SvelteKit",
+	"version": "1.0.0-rc01",
+	"type": "module",
+	"license": "MIT",
+	"author": "KeenMate",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/keenmate/svelte-docs.git"
+	},
+	"homepage": "https://github.com/keenmate/svelte-docs#readme",
+	"bugs": {
+		"url": "https://github.com/keenmate/svelte-docs/issues"
+	},
+	"keywords": [
+		"svelte",
+		"sveltekit",
+		"documentation",
+		"components",
+		"library",
+		"bootstrap",
+		"highlight.js",
+		"code-highlighting",
+		"showcase"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js"
+		},
+		"./styles": "./dist/styles/main.css",
+		"./styles/main.css": "./dist/styles/main.css",
+		"./styles/main.scss": "./dist/styles/main.scss"
+	},
+	"files": [
+		"dist",
+		"!dist/**/*.test.*",
+		"!dist/**/*.spec.*"
+	],
+	"peerDependencies": {
+		"@sveltejs/kit": "^2.0.0",
+		"svelte": "^4.0.0 || ^5.0.0"
+	},
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"build:css": "sass src/lib/styles/main.scss dist/styles/main.css",
+		"package": "svelte-kit sync && svelte-package && npm run build:css && publint",
+		"prepublishOnly": "npm run package",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^6.0.0",
+		"@sveltejs/adapter-static": "^3.0.9",
+		"@sveltejs/kit": "^2.22.0",
+		"@sveltejs/package": "^2.3.0",
+		"@sveltejs/vite-plugin-svelte": "^6.0.0",
+		"publint": "^0.2.0",
+		"sass": "^1.92.1",
+		"svelte": "^5.0.0",
+		"svelte-check": "^4.0.0",
+		"typescript": "^5.0.0",
+		"vite": "^7.0.4"
+	},
+	"dependencies": {
+		"highlight.js": "^11.11.1"
+	}
+}

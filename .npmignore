@@ -1,0 +1,46 @@
+# Source files (only library components should be published)
+src/
+!dist/
+
+# Demo routes and development pages (never publish)
+src/routes/
+src/app.html
+src/app.d.ts
+
+# Development files
+.svelte-kit/
+.vscode/
+node_modules/
+
+# Test files
+**/*.test.ts
+**/*.test.js
+**/*.spec.ts
+**/*.spec.js
+
+# Documentation and development files
+CONTEXT.md
+CLAUDE.md
+docs/
+Makefile
+
+# Keep README.md and CHANGELOG.md for npm package
+
+# Build files
+build/
+.svelte/
+
+# Config files (keep some for reference)
+vite.config.js
+svelte.config.js
+tsconfig.json
+.prettierrc
+.eslintrc.*
+.gitignore
+
+# Other
+*.log
+*.md
+!README.md
+.DS_Store
+Thumbs.db
