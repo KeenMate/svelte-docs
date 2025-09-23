@@ -250,7 +250,7 @@
 
 	<!-- Main content -->
 	<main class="flex-fill overflow-auto">
-		<div class="container-fluid p-4">
+		<div class="container-fluid p-3">
 			<!-- Breadcrumbs -->
 			{#if breadcrumbItems.length > 1}
 				<nav aria-label="breadcrumb" class="mb-3">
@@ -317,95 +317,6 @@
 </footer>
 
 <style>
-	:global(body) {
-		margin: 0;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-		line-height: 1.6;
-		color: #333;
-		background-color: #fafafa;
-	}
-
-
-	:global(h1) {
-		color: #2563eb;
-		margin-bottom: 1rem;
-	}
-
-	:global(h2) {
-		color: #1e40af;
-		margin-top: 2rem;
-		margin-bottom: 1rem;
-	}
-
-	:global(h3) {
-		color: #3730a3;
-		margin-top: 1.5rem;
-		margin-bottom: 0.75rem;
-	}
-
-	:global(code) {
-		background-color: #f1f5f9;
-		padding: 0.2rem 0.4rem;
-		border-radius: 0.25rem;
-		font-family: 'Courier New', monospace;
-		font-size: 0.9em;
-	}
-
-	:global(pre) {
-		background-color: #1e293b;
-		color: #e2e8f0;
-		padding: 1rem;
-		border-radius: 0.5rem;
-		overflow-x: auto;
-		margin: 1rem 0;
-	}
-
-	:global(pre code) {
-		background-color: transparent;
-		padding: 0;
-		color: inherit;
-	}
-
-	:global(ul) {
-		padding-left: 1.5rem;
-	}
-
-	:global(li) {
-		margin-bottom: 0.5rem;
-	}
-
-	:global(a) {
-		color: #2563eb;
-		text-decoration: none;
-	}
-
-	:global(a:hover) {
-		text-decoration: underline;
-	}
-
-	:global(blockquote) {
-		border-left: 4px solid #e2e8f0;
-		margin: 1rem 0;
-		padding-left: 1rem;
-		color: #64748b;
-	}
-
-	:global(table) {
-		width: 100%;
-		border-collapse: collapse;
-		margin: 1rem 0;
-	}
-
-	:global(th, td) {
-		border: 1px solid #e2e8f0;
-		padding: 0.5rem;
-		text-align: left;
-	}
-
-	:global(th) {
-		background-color: #f8fafc;
-		font-weight: 600;
-	}
 
 	/* Sidebar submenu animation */
 	@keyframes slideDown {

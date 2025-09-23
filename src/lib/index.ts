@@ -39,6 +39,9 @@ export {
 	getFeaturesConfig
 } from './stores/config.svelte.js';
 
+// SSR utilities
+export { generateSSRStyles } from './utils/ssr-styles.js';
+
 // Legacy types for backward compatibility
 export interface NavItem {
 	title: string;

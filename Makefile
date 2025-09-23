@@ -68,6 +68,9 @@ test-watch: ## Run tests in watch mode (if configured)
 publish-check: package ## Check package before publishing
 	npm publish --dry-run
 
+publish-dry: package ## Dry run publish to check package
+	npm publish --dry-run
+
 publish: package ## Publish package to NPM
 	@echo "Publishing package to NPM..."
 	npm publish

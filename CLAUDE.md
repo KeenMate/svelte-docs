@@ -24,6 +24,8 @@ npm run build:css        # Compile SCSS to CSS (sass command)
 
 # Publishing
 npm run prepublishOnly   # Automatically runs before npm publish
+make publish-dry         # Dry run publish to check package
+make publish             # Publish to NPM (runs package first)
 ```
 
 ## Project Architecture
@@ -44,8 +46,10 @@ This is NOT a flexible UI kit - it's a **restrictive documentation framework** w
 ### Styling Architecture
 - **Bootstrap 5.3 Foundation**: Uses Bootstrap CSS (not JS components) with custom SCSS overrides
 - **SCSS Preprocessing**: Main styles in `src/lib/styles/main.scss`, compiled to `dist/styles/main.css`
+- **SCSS Variables**: Comprehensive customization system in `src/lib/styles/_variables.scss`
 - **CSS Custom Properties**: Runtime theming via CSS variables (`--docs-primary`, `--docs-secondary`, etc.)
-- **No Custom Styling**: Users work within predefined component constraints only
+- **Centralized CSS**: All code rendering styles consolidated in main.scss for maintainability
+- **Modern SCSS**: Uses `@use` syntax instead of deprecated `@import`
 
 ### Code Organization
 - **`src/lib/`**: Main library code
@@ -53,6 +57,8 @@ This is NOT a flexible UI kit - it's a **restrictive documentation framework** w
   - `types/config.ts`: TypeScript interfaces for configuration system
   - `stores/config.svelte.ts`: Svelte 5 runes-based configuration store
   - `styles/main.scss`: SCSS source for the library styles
+  - `styles/_variables.scss`: Comprehensive SCSS variables for customization
+  - `utils/ssr-styles.ts`: Server-side rendering styles utility
 - **`src/routes/`**: Demo/development routes for testing components
 - **Export Structure**: All public APIs exported through `src/lib/index.ts`
 
@@ -76,10 +82,13 @@ The library enforces explicit, self-documenting property names:
 
 ## Build & Package System
 
-### Static Site Generation
+### Static Site Generation & SSR
 - Uses `@sveltejs/adapter-static` for SSG
 - Outputs to `build/` directory
 - All routes prerendered for optimal performance
+- **SSR Configuration**: Server-side rendering with `+layout.server.ts`
+- **FOUC Prevention**: Inline CSS generation eliminates Flash of Unstyled Content
+- **SEO Optimized**: Configuration and styles rendered server-side
 
 ### Library Packaging
 - Uses `@sveltejs/package` to build library distribution

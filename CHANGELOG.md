@@ -5,6 +5,62 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc02] - 2025-09-23
+
+### Major Improvements
+- **Layout Spacing** - Optimized header and content spacing in DocLayout component
+  - Reduced excessive top margins on h2 elements (2rem → 1.25rem)
+  - Reduced excessive top margins on h3 elements (1.5rem → 1rem)
+  - Improved bottom margins for better vertical rhythm (h2: 1rem → 0.75rem, h3: 0.75rem → 0.5rem)
+  - Reduced main content container padding (p-4 → p-3) for cleaner layout
+  - Added first-child rule to remove top margin from initial headings
+  - Overall cleaner, more professional spacing matching industry standards
+
+- **SSR Configuration System** - Implemented complete Server-Side Rendering support
+  - Added `+layout.server.ts` for server-side configuration loading
+  - Updated `ConfigProvider` to accept both SSR and client-side configurations
+  - Created `ssr-styles.ts` utility for generating inline CSS
+  - **Eliminated FOUC** (Flash of Unstyled Content) on page loads
+  - Improved SEO and performance with server-side config rendering
+
+- **CSS Architecture Overhaul** - Complete consolidation and modernization
+  - **Centralized CSS** - All code rendering styles moved to `main.scss`
+  - Removed duplicate CSS from individual components (`CodeRenderer`, `CodeBlock`, `CodeShowcase`)
+  - Updated SCSS imports to modern `@use` syntax (eliminates deprecation warnings)
+  - Improved maintainability with single source of truth for styling
+
+- **SCSS Variables System** - Comprehensive customization framework
+  - Added `_variables.scss` with 50+ customization variables
+  - Typography spacing variables (`$h1-margin-top`, `$h2-margin-top`, etc.)
+  - Color customization (`$heading-color-h1`, `$code-bg-color`, etc.)
+  - Content spacing (`$paragraph-margin-bottom`, `$list-padding-left`, etc.)
+  - Layout variables (`$navbar-height`, `$sidebar-width`, etc.)
+  - Font family customization (`$font-family-base`, `$font-family-monospace`)
+
+- **Component Architecture Enhancement** - Improved whitespace handling
+  - Moved `<pre>` tag into `CodeRenderer` component to prevent whitespace issues
+  - Updated `CodeBlock` and `CodeShowcase` to use new architecture
+  - **Eliminated unwanted tabs/indentation** in rendered code blocks
+  - Robust solution that prevents whitespace issues from code reformatting
+
+### Fixed
+- **Homepage 404 Errors** - Updated navigation links to point to existing demo pages
+- **Code Block Whitespace** - Resolved unwanted tabs/indentation in HTML output
+- **SCSS Deprecation Warnings** - Updated to modern `@use` syntax from deprecated `@import`
+
+### Enhanced
+- **Build System** - Added publishing commands to Makefile
+  - `make publish-dry` - Dry run publish for testing packages
+  - `make publish` - Actual NPM publishing
+  - Improved cross-platform compatibility
+
+### Documentation
+- **CLAUDE.md Updates** - Enhanced development guidelines
+  - Added comprehensive SSR implementation notes
+  - Updated CSS architecture documentation
+  - Added SCSS customization examples
+  - Improved component development standards
+
 ## [1.0.0-rc01] - 2025-09-21
 
 First release candidate of @keenmate/svelte-docs - A professional component library for building beautiful documentation and showcase sites with SvelteKit.

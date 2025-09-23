@@ -124,7 +124,7 @@ const config: PartialDocsConfig = {
 			iconEmoji="🧩"
 			titleText="Components"
 			descriptionText="Explore the complete set of components including layouts, navigation, and code displays."
-			linkHref="/components"
+			linkHref="/menu-example"
 			linkLabel="Explore"
 			variantType="outline-primary"
 		/>
@@ -135,7 +135,7 @@ const config: PartialDocsConfig = {
 			iconEmoji="💻"
 			titleText="Code Examples"
 			descriptionText="Interactive code examples with syntax highlighting and copy functionality."
-			linkHref="/code-examples"
+			linkHref="/hljs-test"
 			linkLabel="Try It"
 			variantType="outline-primary"
 		/>
@@ -146,7 +146,7 @@ const config: PartialDocsConfig = {
 			iconEmoji="📐"
 			titleText="Layout System"
 			descriptionText="Responsive layout components with Bootstrap integration and custom styling."
-			linkHref="/layout"
+			linkHref="/anchor-demo"
 			linkLabel="Learn More"
 			variantType="outline-primary"
 		/>
@@ -157,7 +157,7 @@ const config: PartialDocsConfig = {
 			iconEmoji="🎨"
 			titleText="Custom Styling"
 			descriptionText="Visual customization, theming options, and SCSS variable configurations."
-			linkHref="/styling"
+			linkHref="/metadata-example"
 			linkLabel="Customize"
 			variantType="outline-primary"
 		/>
@@ -168,10 +168,10 @@ const config: PartialDocsConfig = {
 			iconEmoji="📚"
 			titleText="API Reference"
 			descriptionText="Complete API documentation with TypeScript interfaces and examples."
-			linkHref="/api-reference"
+			linkHref="https://github.com/keenmate/svelte-docs"
 			linkLabel="Reference"
 			variantType="outline-primary"
-			badgeText="Updated"
+			badgeText="GitHub"
 			badgeVariantType="info"
 		/>
 	</div>

@@ -65,6 +65,16 @@ class ConfigStore {
 		this.applyTheme();
 	}
 
+	initializeFromMerged(mergedConfig: DocsConfig) {
+		// Use pre-merged configuration (from SSR)
+		this._config = mergedConfig;
+		this._initialized = true;
+		this._errors = []; // SSR config should already be validated
+
+		// Apply theme CSS custom properties
+		this.applyTheme();
+	}
+
 	update(partialConfig: Partial<DocsConfig>) {
 		if (this._config) {
 			this._config = { ...this._config, ...partialConfig } as DocsConfig;

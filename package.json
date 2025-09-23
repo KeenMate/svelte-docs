@@ -1,7 +1,7 @@
 {
 	"name": "@keenmate/svelte-docs",
 	"description": "A professional component library for building beautiful documentation and showcase sites with SvelteKit",
-	"version": "1.0.0-rc01",
+	"version": "1.0.0-rc02",
 	"type": "module",
 	"license": "MIT",
 	"author": "KeenMate",
@@ -31,7 +31,8 @@
 		},
 		"./styles": "./dist/styles/main.css",
 		"./styles/main.css": "./dist/styles/main.css",
-		"./styles/main.scss": "./dist/styles/main.scss"
+		"./styles/main.scss": "./dist/styles/main.scss",
+		"./styles/variables": "./dist/styles/_variables.scss"
 	},
 	"files": [
 		"dist",

@@ -8,9 +8,13 @@
 		languageType?: string;
 		/** CSS class for the code element */
 		cssClass?: string;
+		/** CSS class for the pre element */
+		preClass?: string;
+		/** Whether this pre has a title (affects padding) */
+		hasTitle?: boolean;
 	}
 
-	let { htmlContent, languageType = 'text', cssClass = '' }: Props = $props();
+	let { htmlContent, languageType = 'text', cssClass = '', preClass = '', hasTitle = false }: Props = $props();
 
 	let containerElement: HTMLElement;
 
@@ -38,16 +42,6 @@
 	});
 </script>
 
-<!-- Container for the dynamically created <code> element -->
-<span bind:this={containerElement}></span>
+<!-- Pre container with dynamically created code element -->
+<pre class="code-content {preClass}" class:has-title={hasTitle} bind:this={containerElement}></pre>
 
-<style>
-	/* Styles for the dynamically created code element */
-	:global(span > code) {
-		background: none;
-		padding: 0;
-		color: inherit;
-		font-size: inherit;
-		font-family: 'Courier New', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-	}
-</style>

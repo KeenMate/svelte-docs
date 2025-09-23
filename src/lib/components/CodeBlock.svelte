@@ -54,12 +54,11 @@
 			{/if}
 		</div>
 	{/if}
-	<pre class="code-content" class:has-title={!!titleText}>
-		<CodeRenderer
-			htmlContent={highlightedCode || codeContent}
-			languageType={languageType}
-		/>
-	</pre>
+	<CodeRenderer
+		htmlContent={highlightedCode || codeContent}
+		languageType={languageType}
+		hasTitle={!!titleText}
+	/>
 	{#if !titleText && isCopyable}
 		<button class="copy-button floating" onclick={copyToClipboard}>
 			{copied ? '✓' : '📋'}
@@ -116,76 +115,6 @@
 		background-color: #334155;
 	}
 
-	.code-content {
-		margin: 0;
-		padding: 1rem;
-		background-color: #1e293b;
-		color: #e2e8f0;
-		overflow-x: auto;
-		font-family: 'Courier New', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-		font-size: 0.9em;
-		line-height: 1.5;
-	}
-
-	.code-content.has-title {
-		padding-top: 0.75rem;
-	}
 
 
-	/* Highlight.js theme customization for dark theme */
-	:global(.code-content .hljs-keyword),
-	:global(.code-content .hljs-selector-tag),
-	:global(.code-content .hljs-literal),
-	:global(.code-content .hljs-section),
-	:global(.code-content .hljs-link) {
-		color: #c792ea;
-	}
-
-	:global(.code-content .hljs-string),
-	:global(.code-content .hljs-attr) {
-		color: #c3e88d;
-	}
-
-	:global(.code-content .hljs-comment),
-	:global(.code-content .hljs-quote) {
-		color: #546e7a;
-		font-style: italic;
-	}
-
-	:global(.code-content .hljs-number),
-	:global(.code-content .hljs-regexp),
-	:global(.code-content .hljs-literal) {
-		color: #f78c6c;
-	}
-
-	:global(.code-content .hljs-function),
-	:global(.code-content .hljs-title) {
-		color: #82aaff;
-	}
-
-	:global(.code-content .hljs-variable),
-	:global(.code-content .hljs-template-variable) {
-		color: #f07178;
-	}
-
-	:global(.code-content .hljs-tag),
-	:global(.code-content .hljs-name) {
-		color: #f07178;
-	}
-
-	:global(.code-content .hljs-type),
-	:global(.code-content .hljs-class),
-	:global(.code-content .hljs-built_in) {
-		color: #ffcb6b;
-	}
-
-	:global(.code-content .hljs-attribute) {
-		color: #c792ea;
-	}
-
-	:global(.code-content .hljs-symbol),
-	:global(.code-content .hljs-bullet),
-	:global(.code-content .hljs-link) {
-		color: #82aaff;
-	}
 </style>

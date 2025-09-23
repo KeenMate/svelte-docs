@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { PartialDocsConfig } from "../types/config.js";
+  import type { PartialDocsConfig, DocsConfig } from "../types/config.js";
   import { configStore } from "../stores/config.svelte.js";
 
   interface Props {
-    configData: PartialDocsConfig;
+    configData?: PartialDocsConfig;
+    // SSR-ready merged config (preferred for SSR)
+    ssrConfig?: DocsConfig;
     children: import("svelte").Snippet;
     // Page-specific metadata that gets merged with site config
     pageTitleText?: string;
@@ -16,6 +18,7 @@
 
   let {
     configData,
+    ssrConfig,
     children,
     pageTitleText,
     pageDescriptionText,
@@ -24,22 +27,27 @@
     pageOgImageUrl,
   }: Props = $props();
 
+  // Use SSR config if available, otherwise fall back to configData
+  let activeConfig = $derived.by(() => {
+    return ssrConfig || configData;
+  });
+
   // Merge page-specific metadata with site config
   let mergedTitle = $derived.by(() => {
     if (pageTitleText) {
-      return configData.site?.title
-        ? `${pageTitleText} - ${configData.site.title}`
+      return activeConfig?.site?.title
+        ? `${pageTitleText} - ${activeConfig.site.title}`
         : pageTitleText;
     }
-    return configData.site?.title || "";
+    return activeConfig?.site?.title || "";
   });
 
   let mergedDescription = $derived.by(() => {
-    return pageDescriptionText || configData.site?.description || "";
+    return pageDescriptionText || activeConfig?.site?.description || "";
   });
 
   let mergedKeywords = $derived.by(() => {
-    const siteKeywords = configData.site?.keywords || [];
+    const siteKeywords = activeConfig?.site?.keywords || [];
     const combinedKeywords = pageKeywordsList
       ? [...siteKeywords, ...pageKeywordsList]
       : siteKeywords;
@@ -48,17 +56,25 @@
   });
 
   let mergedAuthor = $derived.by(() => {
-    return pageAuthorName || configData.site?.author || "";
+    return pageAuthorName || activeConfig?.site?.author || "";
   });
 
   let mergedOgImage = $derived.by(() => {
-    return pageOgImageUrl || configData.site?.ogImage || "";
+    return pageOgImageUrl || activeConfig?.site?.ogImage || "";
   });
 
   // Initialize configuration on mount
   onMount(() => {
     // Initialize configuration immediately
-    configStore.initialize(configData);
+    if (ssrConfig) {
+      // If we have SSR config, use it directly (already merged)
+      configStore.initializeFromMerged(ssrConfig);
+    } else if (configData) {
+      // Fall back to client-side initialization
+      configStore.initialize(configData);
+    } else {
+      console.warn('ConfigProvider: No configuration provided (ssrConfig or configData)');
+    }
     
     // Apply theme immediately if on client
     if (typeof document !== "undefined") {
@@ -67,81 +83,81 @@
 
       // Add site title to document if not already set
       if (
-        configData.site?.title?.trim() &&
-        !document.title.includes(configData.site.title)
+        activeConfig?.site?.title?.trim() &&
+        !document.title.includes(activeConfig.site.title)
       ) {
-        document.title = configData.site.title;
+        document.title = activeConfig.site.title;
       }
 
       // Set meta description
-      if (configData.site?.description?.trim()) {
+      if (activeConfig?.site?.description?.trim()) {
         let metaDescription = document.querySelector(
           'meta[name="description"]'
         );
         if (metaDescription) {
-          metaDescription.setAttribute("content", configData.site.description);
+          metaDescription.setAttribute("content", activeConfig.site.description);
         } else {
           metaDescription = document.createElement("meta");
           metaDescription.setAttribute("name", "description");
-          metaDescription.setAttribute("content", configData.site.description);
+          metaDescription.setAttribute("content", activeConfig.site.description);
           document.head.appendChild(metaDescription);
         }
       }
 
       // Set meta keywords
-      if (configData.site?.keywords?.length && configData.site.keywords.length > 0) {
+      if (activeConfig?.site?.keywords?.length && activeConfig.site.keywords.length > 0) {
         let metaKeywords = document.querySelector('meta[name="keywords"]');
         if (metaKeywords) {
           metaKeywords.setAttribute(
             "content",
-            configData.site.keywords.join(", ")
+            activeConfig.site.keywords.join(", ")
           );
         } else {
           metaKeywords = document.createElement("meta");
           metaKeywords.setAttribute("name", "keywords");
           metaKeywords.setAttribute(
             "content",
-            configData.site.keywords.join(", ")
+            activeConfig.site.keywords.join(", ")
           );
           document.head.appendChild(metaKeywords);
         }
       }
 
       // Set author meta tag
-      if (configData.site?.author?.trim()) {
+      if (activeConfig?.site?.author?.trim()) {
         let metaAuthor = document.querySelector('meta[name="author"]');
         if (metaAuthor) {
-          metaAuthor.setAttribute("content", configData.site.author);
+          metaAuthor.setAttribute("content", activeConfig.site.author);
         } else {
           metaAuthor = document.createElement("meta");
           metaAuthor.setAttribute("name", "author");
-          metaAuthor.setAttribute("content", configData.site.author);
+          metaAuthor.setAttribute("content", activeConfig.site.author);
           document.head.appendChild(metaAuthor);
         }
       }
 
       // Set Open Graph tags
-      if (configData.site?.ogImage?.trim()) {
+      if (activeConfig?.site?.ogImage?.trim()) {
         let ogImage = document.querySelector('meta[property="og:image"]');
         if (ogImage) {
-          ogImage.setAttribute("content", configData.site.ogImage);
+          ogImage.setAttribute("content", activeConfig.site.ogImage);
         } else {
           ogImage = document.createElement("meta");
           ogImage.setAttribute("property", "og:image");
-          ogImage.setAttribute("content", configData.site.ogImage);
+          ogImage.setAttribute("content", activeConfig.site.ogImage);
           document.head.appendChild(ogImage);
         }
       }
 
       // Set Twitter Card tags
-      if (configData.site?.twitterHandle?.trim()) {
+      if (activeConfig?.site?.twitterHandle?.trim()) {
         let twitterSite = document.querySelector('meta[name="twitter:site"]');
         if (twitterSite) {
-          twitterSite.setAttribute("content", configData.site.twitterHandle);
+          twitterSite.setAttribute("content", activeConfig.site.twitterHandle);
         } else {
           twitterSite = document.createElement("meta");
           twitterSite.setAttribute("name", "twitter:site");
-          twitterSite.setAttribute("content", configData.site.twitterHandle);
+          twitterSite.setAttribute("content", activeConfig.site.twitterHandle);
           document.head.appendChild(twitterSite);
         }
       }
@@ -177,8 +193,8 @@
     <meta name="author" content={mergedAuthor} />
   {/if}
 
-  {#if configData.site?.language?.trim()}
-    <meta name="language" content={configData.site.language} />
+  {#if activeConfig?.site?.language?.trim()}
+    <meta name="language" content={activeConfig.site.language} />
   {/if}
 
   {#if mergedOgImage?.trim()}
@@ -186,13 +202,13 @@
     <meta name="twitter:image" content={mergedOgImage} />
   {/if}
 
-  {#if configData.site?.url?.trim()}
-    <meta property="og:url" content={configData.site.url} />
+  {#if activeConfig?.site?.url?.trim()}
+    <meta property="og:url" content={activeConfig.site.url} />
   {/if}
 
-  {#if configData.site?.twitterHandle?.trim()}
-    <meta name="twitter:site" content={configData.site.twitterHandle} />
-    <meta name="twitter:creator" content={configData.site.twitterHandle} />
+  {#if activeConfig?.site?.twitterHandle?.trim()}
+    <meta name="twitter:site" content={activeConfig.site.twitterHandle} />
+    <meta name="twitter:creator" content={activeConfig.site.twitterHandle} />
   {/if}
 
   <!-- Open Graph and Twitter Card defaults -->
@@ -200,8 +216,8 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Canonical URL -->
-  {#if configData.site?.url?.trim()}
-    <link rel="canonical" href={configData.site.url} />
+  {#if activeConfig?.site?.url?.trim()}
+    <link rel="canonical" href={activeConfig.site.url} />
   {/if}
 </svelte:head>
 

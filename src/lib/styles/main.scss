@@ -1,33 +1,32 @@
 // Documentation Showcase Theme
 // Based on svelte-treeview color scheme
 
-// Color Variables - Coolors palette
-$color-primary: #00A7E1 !default;
-$color-primary-dark: #007EA7 !default;
-$color-secondary: #003459 !default;
-$color-dark: #00171F !default;
-$color-light: #FFFFFF !default;
+/*
+CUSTOMIZATION GUIDE:
+To customize typography and spacing, override variables before importing main.scss:
 
-// Bootstrap-like color variables
-$primary-color: $color-primary !default;
-$primary-color-rgb: 0, 167, 225 !default;
-$secondary-color: $color-secondary !default;
-$secondary-color-rgb: 0, 52, 89 !default;
-$dark-color: $color-dark !default;
-$light-color: #f8f9fa !default;
-$border-color: #dee2e6 !default;
-$body-color: #212529 !default;
+// In your custom SCSS file:
+@import '@keenmate/svelte-docs/styles/variables';
 
-// Component Variables
-$navbar-height: 56px !default;
-$sidebar-width: 280px !default;
-$footer-height: 60px !default;
+// Override variables as needed:
+$h2-margin-top: 2rem;           // Increase h2 top margin
+$h2-margin-bottom: 1rem;        // Increase h2 bottom margin
+$heading-color-h2: #ff6b35;     // Change h2 color
+$code-bg-color: #f0f0f0;        // Change code background
+$link-color: #ff6b35;           // Change link color
 
-// Typography
-$font-family-base:
-	-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
-	'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !default;
-$font-family-monospace: 'Courier New', Monaco, 'Cascadia Code', 'Roboto Mono', monospace !default;
+@import '@keenmate/svelte-docs/styles/main.scss';
+
+Available variable categories:
+- Typography Spacing: $h1-margin-top, $h2-margin-top, etc.
+- Typography Colors: $heading-color-h1, $heading-color-h2, etc.
+- Content Spacing: $paragraph-margin-bottom, $list-padding-left, etc.
+- Code Styling: $code-bg-color, $pre-bg-color, etc.
+- Layout: $navbar-height, $sidebar-width, etc.
+*/
+
+// Import variables (can be overridden before this import)
+@use './variables' as *;
 
 // CSS Custom Properties
 :root {
@@ -51,6 +50,125 @@ body {
 	padding-top: var(--navbar-height);
 	font-family: $font-family-base;
 	color: var(--docs-body-color);
+	line-height: 1.6;
+	background-color: #fafafa;
+}
+
+// Global Typography Styles
+h1 {
+	color: $heading-color-h1;
+	margin-top: $h1-margin-top;
+	margin-bottom: $h1-margin-bottom;
+}
+
+h2 {
+	color: $heading-color-h2;
+	margin-top: $h2-margin-top;
+	margin-bottom: $h2-margin-bottom;
+}
+
+h3 {
+	color: $heading-color-h3;
+	margin-top: $h3-margin-top;
+	margin-bottom: $h3-margin-bottom;
+}
+
+h4 {
+	color: $heading-color-h4;
+	margin-top: $h4-margin-top;
+	margin-bottom: $h4-margin-bottom;
+}
+
+h5 {
+	color: $heading-color-h5;
+	margin-top: $h5-margin-top;
+	margin-bottom: $h5-margin-bottom;
+}
+
+h6 {
+	color: $heading-color-h6;
+	margin-top: $h6-margin-top;
+	margin-bottom: $h6-margin-bottom;
+}
+
+// Remove top margin from first heading in content
+h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child {
+	margin-top: 0;
+}
+
+// Paragraph styling
+p {
+	margin-bottom: $paragraph-margin-bottom;
+}
+
+// Code styling
+code {
+	background-color: $code-bg-color;
+	padding: $code-padding;
+	border-radius: $code-border-radius;
+	font-family: $font-family-monospace;
+	font-size: $code-font-size;
+}
+
+pre {
+	background-color: $pre-bg-color;
+	color: $pre-text-color;
+	padding: $pre-padding;
+	border-radius: $pre-border-radius;
+	overflow-x: auto;
+	margin: $pre-margin;
+}
+
+pre code {
+	background-color: transparent;
+	padding: 0;
+	color: inherit;
+}
+
+// List styling
+ul, ol {
+	padding-left: $list-padding-left;
+	margin-bottom: $list-margin-bottom;
+}
+
+li {
+	margin-bottom: $list-item-margin-bottom;
+}
+
+// Link styling
+a {
+	color: $link-color;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+// Blockquote styling
+blockquote {
+	border-left: 4px solid $border-color-light;
+	margin: $blockquote-margin;
+	padding-left: $blockquote-padding-left;
+	color: $text-muted-color;
+}
+
+// Table styling
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: $table-margin;
+}
+
+th, td {
+	border: 1px solid $border-color-light;
+	padding: 0.5rem;
+	text-align: left;
+}
+
+th {
+	background-color: $table-header-bg;
+	font-weight: 600;
 }
 
 // Global navigation icon consistency
@@ -317,9 +435,85 @@ footer {
 	}
 }
 
-// Code Block Component Styles
+// Code Rendering Components Styles
+
+// CodeRenderer - Core code content styles
+.code-content {
+	margin: 0;
+	padding: 1rem;
+	background-color: $pre-bg-color;
+	color: $pre-text-color;
+	overflow-x: auto;
+	font-family: $font-family-monospace;
+	font-size: $code-font-size;
+	line-height: 1.5;
+
+	&.has-title {
+		padding-top: 0.75rem;
+	}
+
+	// Nested code element styles
+	> code {
+		background: none;
+		padding: 0;
+		color: inherit;
+		font-size: inherit;
+		font-family: inherit;
+	}
+}
+
+// CodeBlock - Block container styles
+.code-block {
+	position: relative;
+	margin: 1rem 0;
+	border-radius: 0.5rem;
+	overflow: hidden;
+	background-color: $pre-bg-color;
+
+	.code-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.75rem 1rem;
+		background-color: #334155;
+		border-bottom: 1px solid #475569;
+	}
+
+	.code-title {
+		color: $pre-text-color;
+		font-size: 0.9em;
+		font-weight: 500;
+	}
+
+	.copy-button {
+		background: none;
+		border: 1px solid #475569;
+		color: #94a3b8;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+		cursor: pointer;
+		font-size: 0.8em;
+		transition: all 0.2s;
+
+		&:hover {
+			background-color: #475569;
+			color: $pre-text-color;
+		}
+
+		&.floating {
+			position: absolute;
+			top: 0.5rem;
+			right: 0.5rem;
+			padding: 0.375rem;
+			border-radius: 0.375rem;
+			background-color: #334155;
+		}
+	}
+}
+
+// CodeShowcase - Tabbed code display styles
 .code-showcase {
-	margin: 2rem 0;
+	margin: 1.5rem 0;
 
 	.code-tabs {
 		border-bottom: 2px solid var(--docs-border);
@@ -330,8 +524,12 @@ footer {
 			border: none;
 			border-bottom: 3px solid transparent;
 			border-radius: 0;
-			padding: 0.5rem 1rem;
+			padding: 0.75rem 1rem;
 			transition: all 0.2s ease;
+			background: none;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
 
 			&:hover {
 				color: var(--docs-primary);
@@ -342,31 +540,35 @@ footer {
 				color: var(--docs-primary);
 				background-color: transparent;
 				border-bottom-color: var(--docs-primary);
+				font-weight: 500;
 			}
 		}
 	}
 
 	.code-content {
-		background-color: #1e293b;
+		background-color: $pre-bg-color;
 		border-radius: 0 0 0.5rem 0.5rem;
 		position: relative;
+		min-height: 100px;
+		padding: 1.5rem !important; // Override default for showcase
 
 		.copy-button {
 			position: absolute;
-			top: 0.5rem;
-			right: 0.5rem;
+			top: 0.75rem;
+			right: 0.75rem;
 			background-color: rgba(255, 255, 255, 0.1);
 			border: 1px solid rgba(255, 255, 255, 0.2);
 			color: #94a3b8;
-			padding: 0.25rem 0.5rem;
-			border-radius: 0.25rem;
+			padding: 0.375rem 0.75rem;
+			border-radius: 0.375rem;
 			cursor: pointer;
 			font-size: 0.8rem;
 			transition: all 0.2s;
+			z-index: 2;
 
 			&:hover {
 				background-color: rgba(255, 255, 255, 0.2);
-				color: #e2e8f0;
+				color: $pre-text-color;
 			}
 
 			&.copied {
@@ -375,21 +577,66 @@ footer {
 				color: #86efac;
 			}
 		}
-
-		pre {
-			margin: 0;
-			padding: 1rem;
-			color: #e2e8f0;
-			overflow-x: auto;
-
-			code {
-				font-family: $font-family-monospace;
-				font-size: 0.9em;
-				line-height: 1.5;
-			}
-		}
 	}
 }
+
+// Highlight.js theme customization for dark theme
+.code-content .hljs-keyword,
+.code-content .hljs-selector-tag,
+.code-content .hljs-literal,
+.code-content .hljs-section,
+.code-content .hljs-link {
+	color: #c792ea;
+}
+
+.code-content .hljs-string,
+.code-content .hljs-attr {
+	color: #c3e88d;
+}
+
+.code-content .hljs-comment,
+.code-content .hljs-quote {
+	color: #546e7a;
+	font-style: italic;
+}
+
+.code-content .hljs-number,
+.code-content .hljs-regexp,
+.code-content .hljs-literal {
+	color: #f78c6c;
+}
+
+.code-content .hljs-function,
+.code-content .hljs-title {
+	color: #82aaff;
+}
+
+.code-content .hljs-variable,
+.code-content .hljs-template-variable {
+	color: #f07178;
+}
+
+.code-content .hljs-tag,
+.code-content .hljs-name {
+	color: #f07178;
+}
+
+.code-content .hljs-type,
+.code-content .hljs-class,
+.code-content .hljs-built_in {
+	color: #ffcb6b;
+}
+
+.code-content .hljs-attribute {
+	color: #c792ea;
+}
+
+.code-content .hljs-symbol,
+.code-content .hljs-bullet,
+.code-content .hljs-link {
+	color: #82aaff;
+}
+
 
 // Card Styles
 .card {
