@@ -41,17 +41,35 @@
 		return configStore.getBreadcrumbs($page.url.pathname);
 	});
 
-	// Sidebar state
-	let isSidebarVisible = $state(true);
+	// Sidebar state - load from localStorage or default to true for desktop
+	let isSidebarVisible = $state(false);
 	let expandedMenuItems = $state<Set<string>>(new Set());
+
+	// Initialize sidebar state from localStorage on mount
+	$effect(() => {
+		if (typeof window !== 'undefined') {
+			const stored = localStorage.getItem('sidebar-visible');
+			if (stored !== null) {
+				isSidebarVisible = stored === 'true';
+			} else {
+				// Default: true for desktop, false for mobile
+				isSidebarVisible = window.innerWidth >= 992;
+			}
+		}
+	});
 
 	function toggleSidebar() {
 		isSidebarVisible = !isSidebarVisible;
+		// Persist to localStorage
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('sidebar-visible', String(isSidebarVisible));
+		}
 	}
 
 	function closeSidebarOnMobile() {
 		if (typeof window !== 'undefined' && window.innerWidth < 992) {
 			isSidebarVisible = false;
+			localStorage.setItem('sidebar-visible', 'false');
 		}
 	}
 
@@ -127,12 +145,6 @@
 
 		<!-- Navigation actions -->
 		<div class="navbar-nav ms-auto d-flex flex-row">
-			{#if featuresConfig?.search}
-				<button class="nav-link text-white me-2" aria-label="Search">
-					🔍
-				</button>
-			{/if}
-
 			{#if companyConfig?.social?.github}
 				<a
 					class="nav-link text-white"
@@ -166,7 +178,7 @@
 		{/if}
 
 		<!-- Sidebar -->
-		<nav class="sidebar text-white p-0 {isSidebarVisible ? 'd-block' : 'd-none'}">
+		<nav class="sidebar text-white p-0 {isSidebarVisible ? 'sidebar-visible' : 'sidebar-hidden'}">
 			<div class="nav nav-pills flex-column p-3">
 				{#if navigationConfig?.main}
 					{#each navigationConfig.main as navItem}

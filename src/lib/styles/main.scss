@@ -198,6 +198,11 @@ th {
 	.navbar-brand {
 		color: $light-color !important;
 		font-size: 1.25rem;
+		max-width: calc(100vw - 200px); // Leave space for burger menu and GitHub button
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		display: inline-block;
 
 		&:hover {
 			color: $primary-color !important;
@@ -213,8 +218,8 @@ th {
 	.navbar-toggler {
 		border: 1px solid rgba($primary-color, 0.5);
 		padding: 0.375rem 0.5rem;
-		display: block !important;
 		background-color: rgba($primary-color, 0.05);
+		display: block !important; // Always visible in both desktop and mobile
 
 		&:focus {
 			box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
@@ -333,6 +338,29 @@ th {
 	height: calc(100vh - var(--navbar-height));
 	background-color: rgba(0, 0, 0, 0.5);
 	z-index: 1040;
+}
+
+// Sidebar visibility control
+.sidebar {
+	transition: transform 0.3s ease, opacity 0.3s ease;
+
+	&.sidebar-visible {
+		display: block;
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	&.sidebar-hidden {
+		// Desktop: hide by shifting left
+		@media (min-width: 992px) {
+			display: none;
+		}
+
+		// Mobile: hide by default
+		@media (max-width: 991.98px) {
+			display: none;
+		}
+	}
 }
 
 // Mobile sidebar overlay

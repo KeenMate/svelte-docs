@@ -63,19 +63,19 @@
     return pageOgImageUrl || activeConfig?.site?.ogImage || "";
   });
 
-  // Initialize configuration on mount
+  // Initialize configuration immediately (runs during SSR)
+  if (ssrConfig) {
+    // If we have SSR config, use it directly (already merged)
+    configStore.initializeFromMerged(ssrConfig);
+  } else if (configData) {
+    // Fall back to client-side initialization
+    configStore.initialize(configData);
+  } else {
+    console.warn('ConfigProvider: No configuration provided (ssrConfig or configData)');
+  }
+
+  // Apply theme on mount (client-side only)
   onMount(() => {
-    // Initialize configuration immediately
-    if (ssrConfig) {
-      // If we have SSR config, use it directly (already merged)
-      configStore.initializeFromMerged(ssrConfig);
-    } else if (configData) {
-      // Fall back to client-side initialization
-      configStore.initialize(configData);
-    } else {
-      console.warn('ConfigProvider: No configuration provided (ssrConfig or configData)');
-    }
-    
     // Apply theme immediately if on client
     if (typeof document !== "undefined") {
       // Set data attributes for CSS targeting

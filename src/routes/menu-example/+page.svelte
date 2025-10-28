@@ -1,36 +1,18 @@
 <script lang="ts">
-	import { DocLayout, MenuItem, ConfigProvider } from '$lib/index.js';
-	import type { PartialDocsConfig } from '$lib/index.js';
-
-	const config: PartialDocsConfig = {
-		site: {
-			title: 'MenuItem Demo',
-			description: 'Ukázka MenuItem komponenty',
-		},
-		company: {
-			name: 'KeenMate'
-		},
-		navigation: {
-			main: [
-				{ label: 'Domů', href: '/', icon: '🏠' },
-				{ label: 'Dokumentace', href: '/docs', icon: '📚' }
-			]
-		}
-	};
+	import { DocLayout, MenuItem } from '$lib/index.js';
 </script>
 
-<ConfigProvider configData={config}>
-	<DocLayout titleText="MenuItem Komponenta - Ukázka">
-		<div class="container-fluid py-4">
-			<div class="row">
+<DocLayout titleText="MenuItem Component - Demo">
+	<div class="container-fluid py-4">
+		<div class="row">
 				<div class="col-12 col-lg-6">
-					<h2>Základní MenuItem</h2>
+					<h2>Basic MenuItem</h2>
 					<div class="demo-section">
 						<ul class="list-unstyled">
 							<MenuItem
 								hrefUrl="/home"
-								labelText="Domovská stránka"
-								tooltipText="Přejít na domovskou stránku"
+								labelText="Home Page"
+								tooltipText="Go to home page"
 							>
 								{#snippet iconContent()}
 									🏠
@@ -39,9 +21,9 @@
 
 							<MenuItem
 								hrefUrl="/docs"
-								labelText="Dokumentace"
-								tooltipText="Prohlédnout dokumentaci"
-								badgeText="Nové"
+								labelText="Documentation"
+								tooltipText="View documentation"
+								badgeText="New"
 								badgeVariantType="primary"
 							>
 								{#snippet iconContent()}
@@ -52,7 +34,7 @@
 							<MenuItem
 								hrefUrl="/api"
 								labelText="API Reference"
-								tooltipText="API dokumentace"
+								tooltipText="API documentation"
 								isActive={true}
 							>
 								{#snippet iconContent()}
@@ -64,13 +46,13 @@
 				</div>
 
 				<div class="col-12 col-lg-6">
-					<h2>Speciální stavy</h2>
+					<h2>Special States</h2>
 					<div class="demo-section">
 						<ul class="list-unstyled">
 							<MenuItem
 								hrefUrl="https://github.com"
-								labelText="Externí odkaz"
-								tooltipText="Otevře se v novém okně"
+								labelText="External Link"
+								tooltipText="Opens in new window"
 								isExternal={true}
 								targetWindow="_blank"
 							>
@@ -83,10 +65,10 @@
 
 							<MenuItem
 								hrefUrl="/disabled"
-								labelText="Zakázaná položka"
-								tooltipText="Tato položka je dočasně nedostupná"
+								labelText="Disabled Item"
+								tooltipText="This item is temporarily unavailable"
 								isDisabled={true}
-								badgeText="Brzy"
+								badgeText="Soon"
 								badgeVariantType="warning"
 							>
 								{#snippet iconContent()}
@@ -96,8 +78,8 @@
 
 							<MenuItem
 								hrefUrl="/premium"
-								labelText="Premium funkce"
-								tooltipText="Pouze pro premium uživatele"
+								labelText="Premium Feature"
+								tooltipText="For premium users only"
 								badgeText="PRO"
 								badgeVariantType="success"
 							>
@@ -109,7 +91,7 @@
 							<MenuItem
 								hrefUrl="https://docs.google.com"
 								labelText="Google Docs"
-								tooltipText="Otevře se v novém okně"
+								tooltipText="Opens in new window"
 								targetWindow="_blank"
 								badgeText="External"
 								badgeVariantType="info"
@@ -121,8 +103,8 @@
 
 							<MenuItem
 								hrefUrl="/help"
-								labelText="Nápověda"
-								tooltipText="Otevře se ve stejném okně"
+								labelText="Help"
+								tooltipText="Opens in same window"
 								targetWindow="_self"
 							>
 								{#snippet iconContent()}
@@ -136,14 +118,14 @@
 
 			<div class="row mt-4">
 				<div class="col-12">
-					<h2>Kompletní navigační menu</h2>
+					<h2>Complete Navigation Menu</h2>
 					<div class="demo-section">
 						<nav class="demo-nav">
 							<ul class="list-unstyled">
 								<MenuItem
 									hrefUrl="/getting-started"
-									labelText="Začínáme"
-									tooltipText="Rychlý start a instalace"
+									labelText="Getting Started"
+									tooltipText="Quick start and installation"
 									isActive={true}
 								>
 									{#snippet iconContent()}
@@ -153,8 +135,8 @@
 
 								<MenuItem
 									hrefUrl="/components"
-									labelText="Komponenty"
-									tooltipText="Přehled všech komponent"
+									labelText="Components"
+									tooltipText="Overview of all components"
 									badgeText="15"
 									badgeVariantType="info"
 								>
@@ -165,8 +147,8 @@
 
 								<MenuItem
 									hrefUrl="/examples"
-									labelText="Příklady"
-									tooltipText="Praktické ukázky použití"
+									labelText="Examples"
+									tooltipText="Practical usage examples"
 								>
 									{#snippet iconContent()}
 										💡
@@ -176,7 +158,7 @@
 								<MenuItem
 									hrefUrl="/api"
 									labelText="API"
-									tooltipText="API dokumentace a reference"
+									tooltipText="API documentation and reference"
 								>
 									{#snippet iconContent()}
 										⚙️
@@ -185,8 +167,8 @@
 
 								<MenuItem
 									hrefUrl="/changelog"
-									labelText="Změny"
-									tooltipText="Historie verzí a změn"
+									labelText="Changelog"
+									tooltipText="Version history and changes"
 									badgeText="v1.0"
 									badgeVariantType="success"
 								>
@@ -202,12 +184,12 @@
 
 			<div class="row mt-4">
 				<div class="col-12">
-					<h2>Kód</h2>
+					<h2>Code</h2>
 					<pre><code class="language-svelte">{`<MenuItem
   hrefUrl="/docs"
-  labelText="Dokumentace"
-  tooltipText="Prohlédnout dokumentaci"
-  badgeText="Nové"
+  labelText="Documentation"
+  tooltipText="View documentation"
+  badgeText="New"
   badgeVariantType="primary"
   targetWindow="_self"
   isActive={true}
@@ -217,11 +199,11 @@
   {/snippet}
 </MenuItem>
 
-<!-- Externí odkaz v novém okně -->
+<!-- External link in new window -->
 <MenuItem
   hrefUrl="https://github.com"
   labelText="GitHub"
-  tooltipText="Otevře se v novém okně"
+  tooltipText="Opens in new window"
   targetWindow="_blank"
   isExternal={true}
 >
@@ -229,11 +211,9 @@
     <svg>...</svg>
   {/snippet}
 </MenuItem>`}</code></pre>
-				</div>
 			</div>
-		</div>
-	</DocLayout>
-</ConfigProvider>
+	</div>
+</DocLayout>
 
 <style>
 	.demo-section {

@@ -11,7 +11,12 @@
       "Bash(npm pack:*)",
       "Bash(npx sass:*)",
       "Bash(node:*)",
-      "Bash(make:*)"
+      "Bash(make:*)",
+      "Read(//c/Git/KM/svelte-treeview-showcase/src/routes/**)",
+      "Read(//c/Git/KM/svelte-treeview-showcase/**)",
+      "Read(//c/Git/KM/svelte-switch-showcase/src/routes/**)",
+      "Read(//c/Git/KM/svelte-switch-showcase/src/**)",
+      "Read(//c/Git/KM/svelte-switch-showcase/**)"
     ],
     "deny": [],
     "ask": []

@@ -142,7 +142,7 @@ export type PartialDocsConfig = {
 // Default configuration
 export const defaultConfig: Partial<DocsConfig> = {
   site: {
-	title: "Demo showcase",
+	title: "Documentation",
     language: "en",
     keywords: ["documentation", "svelte", "sveltekit"],
   },

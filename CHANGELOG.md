@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc03] - 2025-10-27
+
+### Fixed
+- **Mobile Sidebar Auto-Open** - Fixed sidebar automatically opening on page reload in mobile view
+  - Sidebar state now initializes based on viewport size (closed on mobile, open on desktop)
+  - Uses Bootstrap's `lg` breakpoint (992px) for consistent responsive behavior
+  - Prevents unwanted sidebar overlay on mobile devices after page refresh
+  - Sidebar state persisted to localStorage for better UX across page navigations
+
+### Enhanced
+- **ConfigProvider SSR Initialization** - Improved configuration initialization timing
+  - Config now initializes immediately during SSR instead of waiting for `onMount`
+  - Ensures configuration is available throughout the component lifecycle
+  - Theme application still happens client-side via `onMount` as required
+
+- **Sidebar State Management** - Complete sidebar persistence system
+  - Sidebar visibility state persisted to localStorage
+  - Intelligent default: closed on mobile (<992px), open on desktop (≥992px)
+  - Smooth transitions with new CSS classes (`sidebar-visible`, `sidebar-hidden`)
+  - State updates on toggle and mobile navigation actions
+
+- **Navbar Improvements** - Better mobile responsiveness
+  - Brand text now has max-width with ellipsis to prevent overflow on mobile
+  - Sidebar toggle button always visible (both desktop and mobile)
+  - Improved spacing calculation: `max-width: calc(100vw - 200px)`
+
+### Changed
+- **Default Site Title** - Updated default config title from "Demo showcase" to "Documentation"
+- **Demo Pages Cleanup** - Removed unnecessary ConfigProvider wrappers from demo pages
+  - anchor-demo and menu-example pages simplified
+  - Removed +page.ts prerender files (using global prerender settings)
+
+### Removed
+- **Search Button** - Temporarily removed non-functional search button from navbar
+  - Will be reintroduced when search functionality is implemented
+
 ## [1.0.0-rc02] - 2025-09-23
 
 ### Major Improvements
