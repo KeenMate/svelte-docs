@@ -92,6 +92,34 @@ export interface ThemeConfig {
       background?: string;
       height?: string;
     };
+    tooltip?: {
+      /** Enable/disable tooltips globally */
+      isEnabled?: boolean;
+      /** Default tooltip placement */
+      placement?: 'top' | 'right' | 'bottom' | 'left';
+      /** Show tooltips on mobile devices */
+      showOnMobile?: boolean;
+      /** Delay before showing tooltip (ms) */
+      showDelay?: number;
+      /** Delay before hiding tooltip (ms) */
+      hideDelay?: number;
+      /** Tooltip background color */
+      backgroundColor?: string;
+      /** Tooltip text color */
+      textColor?: string;
+      /** Tooltip font size */
+      fontSize?: string;
+      /** Maximum width of tooltip */
+      maxWidth?: string;
+      /** Z-index value */
+      zIndex?: number;
+      /** Border radius */
+      borderRadius?: string;
+      /** Padding */
+      padding?: string;
+      /** Arrow size */
+      arrowSize?: string;
+    };
   };
 }
 
@@ -173,6 +201,21 @@ export const defaultConfig: Partial<DocsConfig> = {
       },
       footer: {
         height: "60px",
+      },
+      tooltip: {
+        isEnabled: true,
+        placement: "right",
+        showOnMobile: false,
+        showDelay: 0,
+        hideDelay: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.9)",
+        textColor: "white",
+        fontSize: "0.875rem",
+        maxWidth: "300px",
+        zIndex: 1060,
+        borderRadius: "0.375rem",
+        padding: "0.5rem 0.75rem",
+        arrowSize: "8px",
       },
     },
   },
@@ -295,6 +338,10 @@ export function mergeConfig(
         footer: {
           ...baseConfig.theme?.components?.footer,
           ...userConfig.theme?.components?.footer,
+        },
+        tooltip: {
+          ...baseConfig.theme?.components?.tooltip,
+          ...userConfig.theme?.components?.tooltip,
         },
       },
     },

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import Tooltip from './Tooltip.svelte';
 
 	interface Props {
 		/** Link URL */
@@ -40,6 +41,15 @@
 		cssClass = ''
 	}: Props = $props();
 
+	let linkElement: HTMLAnchorElement;
+	let isHovered = $state(false);
+	let isFocused = $state(false);
+
+	// Show tooltip when hovered or focused
+	let isTooltipVisible = $derived.by(() => {
+		return (isHovered || isFocused) && !!tooltipText && !isDisabled;
+	});
+
 	// Generate unique tooltip ID for accessibility
 	let tooltipId = $derived.by(() => {
 		if (!tooltipText) return undefined;
@@ -59,10 +69,27 @@
 
 		return attrs;
 	});
+
+	function handleMouseEnter() {
+		isHovered = true;
+	}
+
+	function handleMouseLeave() {
+		isHovered = false;
+	}
+
+	function handleFocus() {
+		isFocused = true;
+	}
+
+	function handleBlur() {
+		isFocused = false;
+	}
 </script>
 
 <li class="menu-item {cssClass}">
 	<a
+		bind:this={linkElement}
 		href={hrefUrl}
 		class="menu-link"
 		class:active={isActive}
@@ -70,6 +97,10 @@
 		aria-disabled={isDisabled}
 		aria-describedby={tooltipId}
 		{...linkAttributes}
+		onmouseenter={handleMouseEnter}
+		onmouseleave={handleMouseLeave}
+		onfocus={handleFocus}
+		onblur={handleBlur}
 	>
 		{#if iconContent}
 			<span class="menu-icon" aria-hidden="true">
@@ -96,11 +127,11 @@
 		{/if}
 	</a>
 
-	{#if tooltipText && tooltipId}
-		<div class="tooltip" id={tooltipId} role="tooltip">
-			{tooltipText}
-		</div>
-	{/if}
+	<Tooltip
+		tooltipText={tooltipText || ''}
+		targetElement={linkElement}
+		isVisible={isTooltipVisible}
+	/>
 </li>
 
 <style>
@@ -226,43 +257,6 @@
 		color: white;
 	}
 
-	/* Tooltip styling */
-	.tooltip {
-		position: absolute;
-		z-index: 1000;
-		background-color: var(--docs-dark, #00171F);
-		color: white;
-		padding: 0.5rem 0.75rem;
-		border-radius: 0.375rem;
-		font-size: 0.75rem;
-		line-height: 1.2;
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-		pointer-events: none;
-		opacity: 0;
-		visibility: hidden;
-		transition: opacity 0.2s, visibility 0.2s;
-		white-space: nowrap;
-		left: 100%;
-		top: 50%;
-		transform: translateY(-50%);
-		margin-left: 0.5rem;
-	}
-
-	.tooltip::before {
-		content: '';
-		position: absolute;
-		top: 50%;
-		left: -0.25rem;
-		transform: translateY(-50%);
-		border: 0.25rem solid transparent;
-		border-right-color: var(--docs-dark, #00171F);
-	}
-
-	.menu-item:hover .tooltip {
-		opacity: 1;
-		visibility: visible;
-	}
-
 	/* Responsive design */
 	@media (max-width: 768px) {
 		.menu-link {
@@ -273,10 +267,6 @@
 		.menu-icon {
 			width: 1rem;
 			height: 1rem;
-		}
-
-		.tooltip {
-			display: none; /* Hide tooltips on mobile */
 		}
 	}
 </style>

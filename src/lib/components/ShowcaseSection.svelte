@@ -39,9 +39,7 @@
 	<div class="row">
 		<div class="col-lg-4">
 			<h5 class="text-primary">{demoColumnTitle}</h5>
-			<div class="demo-container">
-				{@render demoContent?.()}
-			</div>
+			{@render demoContent?.()}
 		</div>
 
 		<div class="col-lg-4">

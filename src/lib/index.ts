@@ -2,6 +2,7 @@
 export { default as DocLayout } from './components/DocLayout.svelte';
 export { default as Navigation } from './components/Navigation.svelte';
 export { default as MenuItem } from './components/MenuItem.svelte';
+export { default as Tooltip } from './components/Tooltip.svelte';
 export { default as CodeBlock } from './components/CodeBlock.svelte';
 export { default as CodeRenderer } from './components/CodeRenderer.svelte';
 export { default as ShowcaseSection } from './components/ShowcaseSection.svelte';
@@ -38,6 +39,9 @@ export {
 	getThemeConfig,
 	getFeaturesConfig
 } from './stores/config.svelte.js';
+
+// Viewport store
+export { viewportStore } from './stores/viewport.svelte.js';
 
 // SSR utilities
 export { generateSSRStyles } from './utils/ssr-styles.js';

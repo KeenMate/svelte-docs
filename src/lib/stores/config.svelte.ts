@@ -131,6 +131,33 @@ class ConfigStore {
 			if (theme.components.footer?.height) {
 				root.style.setProperty('--footer-height', theme.components.footer.height);
 			}
+			if (theme.components.tooltip) {
+				const tooltip = theme.components.tooltip;
+				if (tooltip.backgroundColor) {
+					root.style.setProperty('--tooltip-bg', tooltip.backgroundColor);
+				}
+				if (tooltip.textColor) {
+					root.style.setProperty('--tooltip-color', tooltip.textColor);
+				}
+				if (tooltip.fontSize) {
+					root.style.setProperty('--tooltip-font-size', tooltip.fontSize);
+				}
+				if (tooltip.maxWidth) {
+					root.style.setProperty('--tooltip-max-width', tooltip.maxWidth);
+				}
+				if (tooltip.zIndex !== undefined) {
+					root.style.setProperty('--tooltip-z-index', String(tooltip.zIndex));
+				}
+				if (tooltip.borderRadius) {
+					root.style.setProperty('--tooltip-border-radius', tooltip.borderRadius);
+				}
+				if (tooltip.padding) {
+					root.style.setProperty('--tooltip-padding', tooltip.padding);
+				}
+				if (tooltip.arrowSize) {
+					root.style.setProperty('--tooltip-arrow-size', tooltip.arrowSize);
+				}
+			}
 		}
 	}
 

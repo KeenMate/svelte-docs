@@ -5,11 +5,135 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc06] - 2025-11-07
+
+### Added
+- **Floating UI Integration** - Smart tooltip positioning system
+  - Integrated `@floating-ui/dom` for intelligent tooltip placement
+  - Automatic collision detection and viewport boundary awareness
+  - Dynamic fallback positioning based on available space
+  - Supports top, right, bottom, and left placements with smart fallbacks
+
+- **Tooltip Configuration System** - Comprehensive tooltip customization
+  - Global enable/disable toggle (`theme.components.tooltip.isEnabled`)
+  - Configurable default placement (`placement`: 'top' | 'right' | 'bottom' | 'left')
+  - Mobile behavior control (`showOnMobile`)
+  - Configurable show/hide delays (`showDelay`, `hideDelay` in milliseconds)
+  - Full styling customization (backgroundColor, textColor, fontSize, etc.)
+  - Z-index, border radius, padding, and arrow size controls
+  - CSS custom properties for runtime theming
+  - All settings optional with sensible defaults
+
+### Enhanced
+- **Sidebar Navigation** - Full-height display on long pages
+  - Changed sidebar positioning from `relative` to `fixed`
+  - Sidebar now stays visible at all times regardless of page length
+  - Properly pinned below navbar with full viewport height
+  - Main content automatically adjusts with left margin on desktop
+  - Smooth transitions when toggling sidebar visibility
+
+- **Sidebar Scrolling** - Improved overflow handling
+  - Added vertical scrolling with `overflow-y: auto`
+  - Custom scrollbar styling for dark sidebar theme
+  - Works on both desktop and mobile views
+  - Proper height calculations: `calc(100vh - var(--navbar-height))`
+
+- **ShowcaseSection Component** - Consistent spacing across columns
+  - Removed `demo-container` wrapper for cleaner structure
+  - All three columns (demo, controls, description) now have consistent 0.5rem padding
+  - Fixed CodeBlock margin stacking in controls column
+  - Removed unused demo-container styles from SCSS
+
+- **SCSS Architecture** - Eliminated inline styles
+  - Moved all inline styles to proper SCSS classes
+  - Added `.nav-expand-arrow` and `.expanded` classes for menu expansion
+  - Added `.nav-children` class with slideDown animation
+  - Added `.nav-link-child` class for nested menu items
+  - Added `@keyframes slideDown` animation definition
+  - Cleaner, more maintainable component templates
+
+- **Tooltip Positioning** - Optimized fallback strategy
+  - Primary placement: right (for sidebar menus)
+  - Smart fallbacks: top → bottom → left (avoids sidebar overlap)
+  - Placement-aware fallback order adapts to primary position
+  - Better UX for menu tooltips in left-positioned sidebars
+
+### Fixed
+- **Tooltip Reactivity** - Resolved Svelte 5 binding warnings
+  - Fixed `bind:this` non-reactive property warnings
+  - Changed from Map to reactive object for element storage
+  - Proper reactive state management with `$state`
+  - Tooltips now position correctly (no more top-left corner bug)
+
+- **Sidebar Overflow** - Resolved menu truncation on long pages
+  - Fixed issue where sidebar would stop mid-screen on long pages
+  - Sidebar content no longer scrolls away with page content
+  - All menu items remain accessible through scrolling
+
+### Configuration
+- **New Configuration Options** - `theme.components.tooltip`
+  ```typescript
+  tooltip: {
+    isEnabled: true,                      // Default: enabled
+    placement: 'right',                   // Default: right side
+    showOnMobile: false,                  // Default: hidden on mobile
+    showDelay: 0,                         // Default: no delay
+    hideDelay: 0,                         // Default: no delay
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    textColor: "white",
+    fontSize: "0.875rem",
+    maxWidth: "300px",
+    zIndex: 1060,
+    borderRadius: "0.375rem",
+    padding: "0.5rem 0.75rem",
+    arrowSize: "8px"
+  }
+  ```
+
+### Developer Experience
+- **CSS Variables** - New tooltip-specific CSS custom properties
+  - `--tooltip-bg`, `--tooltip-color`, `--tooltip-font-size`
+  - `--tooltip-max-width`, `--tooltip-z-index`, `--tooltip-border-radius`
+  - `--tooltip-padding`, `--tooltip-arrow-size`
+  - Applied automatically by config store when theme changes
+
+## [1.0.0-rc05] - 2025-10-28
+
+### Fixed
+- **Navbar Flex Behavior** - Fixed navbar alignment issue at 991-992px breakpoint
+  - Applied `flex-wrap: nowrap !important` to `.navbar-expand-lg` at all times
+  - Applied `justify-content: flex-start !important` to `.navbar-expand-lg` at all times
+  - Prevents buttons from being pushed down and overlapping navbar border
+
+## [1.0.0-rc04] - 2025-10-28
+
+### Added
+- **Viewport Store** - New reactive store for tracking viewport/breakpoint changes
+  - `viewportStore` tracks `isMobileView` (< 992px) and `windowWidth`
+  - Automatically updates on window resize
+  - Exported from main library index for use in consumer applications
+  - Uses Svelte 5 runes for reactivity
+
+### Fixed
+- **Navbar Alignment at Breakpoint** - Fixed navbar items jumping at 991-992px breakpoint
+  - Added explicit vertical centering for `.container-fluid`
+  - Removed Bootstrap's default padding that caused height inconsistency
+  - Ensured all navbar items stay aligned across all viewport sizes
+- **Sidebar State Initialization** - Improved sidebar state initialization timing
+  - Changed from `$effect()` to `$state.raw()` with IIFE for immediate initialization
+  - Sidebar state now loads from localStorage before first render
+  - Eliminates any potential flash or delay in sidebar state
+- **Mobile Sidebar Persistence** - Mobile sidebar state no longer persisted to localStorage
+  - Only desktop sidebar state (≥992px) is saved to localStorage
+  - Mobile sidebar acts as temporary overlay without affecting stored preferences
+  - Uses `viewportStore.isMobileView` for consistent breakpoint detection
+
 ## [1.0.0-rc03] - 2025-10-27
 
 ### Fixed
 - **Mobile Sidebar Auto-Open** - Fixed sidebar automatically opening on page reload in mobile view
-  - Sidebar state now initializes based on viewport size (closed on mobile, open on desktop)
+  - Sidebar state now initializes immediately from localStorage or viewport size (no delay)
+  - Changed from `$effect()` to `$state.raw()` initialization to prevent flash
   - Uses Bootstrap's `lg` breakpoint (992px) for consistent responsive behavior
   - Prevents unwanted sidebar overlay on mobile devices after page refresh
   - Sidebar state persisted to localStorage for better UX across page navigations

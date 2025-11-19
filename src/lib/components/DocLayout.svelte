@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { configStore } from '../stores/config.svelte.js';
+	import { viewportStore } from '../stores/viewport.svelte.js';
 	import type { NavigationItem } from '../types/config.js';
+	import Tooltip from './Tooltip.svelte';
 
 	interface Props {
 		titleText?: string;
@@ -41,35 +43,39 @@
 		return configStore.getBreadcrumbs($page.url.pathname);
 	});
 
-	// Sidebar state - load from localStorage or default to true for desktop
-	let isSidebarVisible = $state(false);
+	// Sidebar state - initialize immediately from localStorage or viewport
+	let isSidebarVisible = $state.raw(
+		typeof window !== 'undefined'
+			? (() => {
+					const stored = localStorage.getItem('sidebar-visible');
+					if (stored !== null) {
+						return stored === 'true';
+					}
+					// Default: true for desktop, false for mobile
+					return !viewportStore.isMobileView;
+				})()
+			: false // SSR default
+	);
 	let expandedMenuItems = $state<Set<string>>(new Set());
 
-	// Initialize sidebar state from localStorage on mount
-	$effect(() => {
-		if (typeof window !== 'undefined') {
-			const stored = localStorage.getItem('sidebar-visible');
-			if (stored !== null) {
-				isSidebarVisible = stored === 'true';
-			} else {
-				// Default: true for desktop, false for mobile
-				isSidebarVisible = window.innerWidth >= 992;
-			}
-		}
-	});
+	// Tooltip state tracking
+	let hoveredItem = $state<string | null>(null);
+	let focusedItem = $state<string | null>(null);
+	let navLinkElements = $state<Record<string, HTMLElement>>({});
 
 	function toggleSidebar() {
 		isSidebarVisible = !isSidebarVisible;
-		// Persist to localStorage
-		if (typeof window !== 'undefined') {
+		// Only persist to localStorage on desktop
+		// Mobile sidebar is an overlay and shouldn't persist its state
+		if (!viewportStore.isMobileView) {
 			localStorage.setItem('sidebar-visible', String(isSidebarVisible));
 		}
 	}
 
 	function closeSidebarOnMobile() {
-		if (typeof window !== 'undefined' && window.innerWidth < 992) {
+		if (viewportStore.isMobileView) {
 			isSidebarVisible = false;
-			localStorage.setItem('sidebar-visible', 'false');
+			// Don't persist mobile sidebar state to localStorage
 		}
 	}
 
@@ -97,6 +103,31 @@
 		if (isItemActive(menuItem)) return true;
 		// Otherwise check manual expansion state
 		return expandedMenuItems.has(menuItem.label);
+	}
+
+	// Tooltip helper functions
+	function getItemKey(item: NavigationItem, isChild: boolean = false): string {
+		return `${isChild ? 'child-' : ''}${item.href || item.label}`;
+	}
+
+	function isTooltipVisible(itemKey: string): boolean {
+		return hoveredItem === itemKey || focusedItem === itemKey;
+	}
+
+	function handleItemMouseEnter(itemKey: string) {
+		hoveredItem = itemKey;
+	}
+
+	function handleItemMouseLeave() {
+		hoveredItem = null;
+	}
+
+	function handleItemFocus(itemKey: string) {
+		focusedItem = itemKey;
+	}
+
+	function handleItemBlur() {
+		focusedItem = null;
 	}
 </script>
 
@@ -184,10 +215,15 @@
 					{#each navigationConfig.main as navItem}
 						{#if navItem.children}
 							<!-- Parent item with children -->
+							{@const parentKey = getItemKey(navItem)}
 							<button
+								bind:this={navLinkElements[parentKey]}
 								class="nav-link text-white mb-2 d-flex align-items-center justify-content-between {isItemActive(navItem) ? 'active bg-primary' : ''}"
-								style="border-radius: 0.5rem;"
 								onclick={() => toggleSubmenu(navItem.label)}
+								onmouseenter={() => handleItemMouseEnter(parentKey)}
+								onmouseleave={handleItemMouseLeave}
+								onfocus={() => handleItemFocus(parentKey)}
+								onblur={handleItemBlur}
 								type="button"
 							>
 								<span class="d-flex align-items-center">
@@ -199,20 +235,30 @@
 										<small class="badge bg-secondary ms-2">{navItem.badge}</small>
 									{/if}
 								</span>
-								<span class="ms-auto" style="transition: transform 0.2s; transform: rotate({shouldExpandMenu(navItem) ? '90deg' : '0deg'});">
+								<span class="ms-auto nav-expand-arrow {shouldExpandMenu(navItem) ? 'expanded' : ''}">
 									▶
 								</span>
 							</button>
+							<Tooltip
+								tooltipText={navItem.label}
+								targetElement={navLinkElements[parentKey] || null}
+								isVisible={isTooltipVisible(parentKey)}
+							/>
 
 							<!-- Collapsible children -->
 							{#if shouldExpandMenu(navItem)}
-								<div class="nav-children mb-2" style="animation: slideDown 0.2s ease-out; margin-left: 1.25rem;">
+								<div class="nav-children">
 									{#each navItem.children as childItem}
+										{@const childKey = getItemKey(childItem, true)}
 										<a
+											bind:this={navLinkElements[childKey]}
 											href={childItem.href}
-											class="nav-link text-white-75 mb-1 small {$page.url.pathname === childItem.href ? 'active bg-info' : ''}"
-											style="border-radius: 0.375rem; padding: 0.375rem 0.75rem;"
+											class="nav-link nav-link-child text-white-75 {$page.url.pathname === childItem.href ? 'active bg-info' : ''}"
 											onclick={closeSidebarOnMobile}
+											onmouseenter={() => handleItemMouseEnter(childKey)}
+											onmouseleave={handleItemMouseLeave}
+											onfocus={() => handleItemFocus(childKey)}
+											onblur={handleItemBlur}
 											target={childItem.external ? '_blank' : undefined}
 											rel={childItem.external ? 'noopener noreferrer' : undefined}
 										>
@@ -227,16 +273,26 @@
 												<small class="ms-1">↗</small>
 											{/if}
 										</a>
+										<Tooltip
+											tooltipText={childItem.label}
+											targetElement={navLinkElements[childKey] || null}
+											isVisible={isTooltipVisible(childKey)}
+										/>
 									{/each}
 								</div>
 							{/if}
 						{:else}
 							<!-- Regular item without children -->
+							{@const regularKey = getItemKey(navItem)}
 							<a
+								bind:this={navLinkElements[regularKey]}
 								href={navItem.href}
 								class="nav-link text-white mb-2 d-flex align-items-center justify-content-between {$page.url.pathname === navItem.href ? 'active bg-primary' : ''}"
-								style="border-radius: 0.5rem;"
 								onclick={closeSidebarOnMobile}
+								onmouseenter={() => handleItemMouseEnter(regularKey)}
+								onmouseleave={handleItemMouseLeave}
+								onfocus={() => handleItemFocus(regularKey)}
+								onblur={handleItemBlur}
 								target={navItem.external ? '_blank' : undefined}
 								rel={navItem.external ? 'noopener noreferrer' : undefined}
 							>
@@ -253,6 +309,11 @@
 									<small class="ms-auto">↗</small>
 								{/if}
 							</a>
+							<Tooltip
+								tooltipText={navItem.label}
+								targetElement={navLinkElements[regularKey] || null}
+								isVisible={isTooltipVisible(regularKey)}
+							/>
 						{/if}
 					{/each}
 				{/if}
