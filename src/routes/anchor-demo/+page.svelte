@@ -101,9 +101,9 @@
 				titleText="Styling Options"
 				subtitleText="Styling and appearance options"
 				idText="styling-options"
-				demoColumnTitle="Styles"
-				controlsColumnTitle="Settings"
-				descriptionColumnTitle="Result"
+				col1Title="Styles"
+				col2Title="Settings"
+				col3Title="Result"
 			>
 				{#snippet demoContent()}
 					<div class="p-3 bg-success text-white rounded">
@@ -136,9 +136,9 @@
 						<h6>Custom Columns</h6>
 						<p>This section uses custom column names:</p>
 						<ul class="small">
-							<li><code>demoColumnTitle="Styles"</code></li>
-							<li><code>controlsColumnTitle="Settings"</code></li>
-							<li><code>descriptionColumnTitle="Result"</code></li>
+							<li><code>col1Title="Styles"</code></li>
+							<li><code>col2Title="Settings"</code></li>
+							<li><code>col3Title="Result"</code></li>
 						</ul>
 						<p><strong>Anchor URL:</strong> <code>#styling-options</code></p>
 					</div>
@@ -194,6 +194,201 @@
 				{/snippet}
 			</ShowcaseSection>
 
+			<!-- Layout Examples Section -->
+			<div class="row mt-5 mb-4">
+				<div class="col-12">
+					<h2>📐 Layout Options</h2>
+					<p class="lead">ShowcaseSection supports flexible column layouts - from 2 to 3 columns with customizable widths.</p>
+				</div>
+			</div>
+
+			<!-- 2-Column: Balanced (50/50) -->
+			<ShowcaseSection
+				titleText="2-Column Layout: Balanced"
+				subtitleText="Equal width columns (50% / 50%)"
+				idText="layout-2col-balanced"
+				columnCountType={2}
+				leftColumnSize={6}
+				col1Title="Preview"
+				col2Title="Configuration"
+			>
+				{#snippet demoContent()}
+					<div class="p-3 bg-light border rounded">
+						<h6>50% Width Column</h6>
+						<p>This column takes up half the available width (6/12 Bootstrap grid units).</p>
+						<code>leftColumnSize={6}</code>
+					</div>
+				{/snippet}
+
+				{#snippet controlsContent()}
+					<div class="p-3">
+						<h6>Layout Props</h6>
+						<pre class="small bg-dark text-light p-2 rounded"><code>{`columnCountType={2}
+leftColumnSize={6}
+col1Title="Preview"
+col2Title="Configuration"`}</code></pre>
+						<p class="small mt-2 mb-0">The right column size is auto-calculated to 6.</p>
+					</div>
+				{/snippet}
+			</ShowcaseSection>
+
+			<!-- 2-Column: Wide Left (67/33) -->
+			<ShowcaseSection
+				titleText="2-Column Layout: Wide Left"
+				subtitleText="Wide left column (67% / 33%)"
+				idText="layout-2col-wide-left"
+				columnCountType={2}
+				leftColumnSize={8}
+				col1Title="Main Content"
+				col2Title="Sidebar"
+			>
+				{#snippet demoContent()}
+					<div class="p-3 bg-primary text-white rounded">
+						<h6>Wide Content Area (67%)</h6>
+						<p>Perfect for showcasing main content with a narrow sidebar.</p>
+						<p>This column takes 8/12 grid units (66.67% width).</p>
+						<code class="text-light">leftColumnSize={8}</code>
+					</div>
+				{/snippet}
+
+				{#snippet controlsContent()}
+					<div class="p-3">
+						<h6>Narrow Sidebar (33%)</h6>
+						<p class="small">Auto-calculated to 4/12 grid units.</p>
+						<pre class="small bg-dark text-light p-2 rounded"><code>{`columnCountType={2}
+leftColumnSize={8}
+// rightColumnSize auto = 4`}</code></pre>
+					</div>
+				{/snippet}
+			</ShowcaseSection>
+
+			<!-- 2-Column: Narrow Left (33/67) -->
+			<ShowcaseSection
+				titleText="2-Column Layout: Narrow Left"
+				subtitleText="Narrow left column (33% / 67%)"
+				idText="layout-2col-narrow-left"
+				columnCountType={2}
+				leftColumnSize={4}
+				rightColumnSize={8}
+				col1Title="Quick Info"
+				col2Title="Details"
+			>
+				{#snippet demoContent()}
+					<div class="p-3 border rounded">
+						<h6>Narrow (33%)</h6>
+						<p class="small">Great for icons, labels, or quick actions.</p>
+						<code class="small">4/12 units</code>
+					</div>
+				{/snippet}
+
+				{#snippet controlsContent()}
+					<div class="p-3 bg-success text-white rounded">
+						<h6>Wide Details Area (67%)</h6>
+						<p>This wider column is perfect for detailed information, documentation, or complex controls.</p>
+						<p>Explicitly set to 8/12 grid units with <code class="text-light">rightColumnSize={8}</code>.</p>
+						<ul class="small">
+							<li>More space for content</li>
+							<li>Better readability</li>
+							<li>Room for complex layouts</li>
+						</ul>
+					</div>
+				{/snippet}
+			</ShowcaseSection>
+
+			<!-- 2-Column: Very Wide (25/75) -->
+			<ShowcaseSection
+				titleText="2-Column Layout: Very Wide"
+				subtitleText="Very narrow left, very wide right (25% / 75%)"
+				idText="layout-2col-very-wide"
+				columnCountType={2}
+				leftColumnSize={3}
+				col1Title="Icon"
+				col2Title="Content"
+			>
+				{#snippet demoContent()}
+					<div class="p-3 border rounded text-center">
+						<div style="font-size: 2rem;">📊</div>
+						<code class="small">3/12</code>
+					</div>
+				{/snippet}
+
+				{#snippet controlsContent()}
+					<div class="p-3">
+						<h6>Maximum Content Width (75%)</h6>
+						<p>Ideal for icon + content layouts, or when you need maximum horizontal space for the main content.</p>
+						<pre class="small bg-dark text-light p-2 rounded"><code>{`columnCountType={2}
+leftColumnSize={3}
+// rightColumnSize auto = 9`}</code></pre>
+						<p class="small mt-2">The right column automatically gets 9/12 grid units (75% width).</p>
+					</div>
+				{/snippet}
+			</ShowcaseSection>
+
+			<!-- 3-Column: Custom Sizes -->
+			<ShowcaseSection
+				titleText="3-Column Layout: Custom Sizes"
+				subtitleText="Custom width distribution (25% / 50% / 25%)"
+				idText="layout-3col-custom"
+				columnCountType={3}
+				leftColumnSize={3}
+				middleColumnSize={6}
+				rightColumnSize={3}
+				col1Title="Left Panel"
+				col2Title="Main Content"
+				col3Title="Right Panel"
+			>
+				{#snippet demoContent()}
+					<div class="p-2 border rounded">
+						<h6 class="small">Left (25%)</h6>
+						<p class="small mb-0">3/12 units</p>
+					</div>
+				{/snippet}
+
+				{#snippet controlsContent()}
+					<div class="p-2 bg-warning rounded">
+						<h6 class="small">Center (50%)</h6>
+						<p class="small mb-0">6/12 units - Main focus area</p>
+						<code class="small">middleColumnSize={6}</code>
+					</div>
+				{/snippet}
+
+				{#snippet descriptionContent()}
+					<div class="p-2 border rounded">
+						<h6 class="small">Right (25%)</h6>
+						<p class="small mb-0">3/12 units</p>
+					</div>
+				{/snippet}
+			</ShowcaseSection>
+
+			<!-- 3-Column: Default (Equal) -->
+			<ShowcaseSection
+				titleText="3-Column Layout: Default"
+				subtitleText="Equal width columns (33% / 33% / 33%)"
+				idText="layout-3col-default"
+			>
+				{#snippet demoContent()}
+					<div class="p-3 bg-light border rounded">
+						<h6>Column 1 (33%)</h6>
+						<p class="small">Default 4/12 grid units</p>
+					</div>
+				{/snippet}
+
+				{#snippet controlsContent()}
+					<div class="p-3 border rounded">
+						<h6>Column 2 (33%)</h6>
+						<p class="small">Default 4/12 grid units</p>
+					</div>
+				{/snippet}
+
+				{#snippet descriptionContent()}
+					<div class="p-3 bg-light border rounded">
+						<h6>Column 3 (33%)</h6>
+						<p class="small">Default 4/12 grid units</p>
+						<p class="small mb-0">No size props needed - uses defaults!</p>
+					</div>
+				{/snippet}
+			</ShowcaseSection>
+
 			<!-- Navigační tlačítka -->
 			<div class="row mt-5">
 				<div class="col-12">
@@ -202,7 +397,8 @@
 							<h4>🧭 Quick Navigation</h4>
 						</div>
 						<div class="card-body">
-							<div class="d-flex flex-wrap gap-2">
+							<h5 class="mb-3">Basic Examples</h5>
+							<div class="d-flex flex-wrap gap-2 mb-4">
 								<a href="#basic-usage" class="btn btn-outline-primary btn-sm">
 									↗️ Basic Usage
 								</a>
@@ -215,10 +411,33 @@
 								<a href="#best-practices" class="btn btn-outline-info btn-sm">
 									✨ Best Practices
 								</a>
-								<a href="#top" class="btn btn-outline-secondary btn-sm">
-									⬆️ Back to Top
+							</div>
+
+							<h5 class="mb-3">Layout Examples</h5>
+							<div class="d-flex flex-wrap gap-2 mb-3">
+								<a href="#layout-2col-balanced" class="btn btn-outline-primary btn-sm">
+									📊 2-Col: 50/50
+								</a>
+								<a href="#layout-2col-wide-left" class="btn btn-outline-primary btn-sm">
+									📊 2-Col: 67/33
+								</a>
+								<a href="#layout-2col-narrow-left" class="btn btn-outline-primary btn-sm">
+									📊 2-Col: 33/67
+								</a>
+								<a href="#layout-2col-very-wide" class="btn btn-outline-primary btn-sm">
+									📊 2-Col: 25/75
+								</a>
+								<a href="#layout-3col-custom" class="btn btn-outline-success btn-sm">
+									📐 3-Col: Custom
+								</a>
+								<a href="#layout-3col-default" class="btn btn-outline-success btn-sm">
+									📐 3-Col: Default
 								</a>
 							</div>
+
+							<a href="#top" class="btn btn-outline-secondary btn-sm">
+								⬆️ Back to Top
+							</a>
 						</div>
 					</div>
 				</div>

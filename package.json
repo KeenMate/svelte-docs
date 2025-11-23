@@ -1,7 +1,7 @@
 {
 	"name": "@keenmate/svelte-docs",
 	"description": "A professional component library for building beautiful documentation and showcase sites with SvelteKit",
-	"version": "1.0.0-rc06",
+	"version": "1.0.0-rc08",
 	"type": "module",
 	"license": "MIT",
 	"author": "KeenMate",
@@ -32,7 +32,14 @@
 		"./styles": "./dist/styles/main.css",
 		"./styles/main.css": "./dist/styles/main.css",
 		"./styles/main.scss": "./dist/styles/main.scss",
-		"./styles/variables": "./dist/styles/_variables.scss"
+		"./styles/variables": "./dist/styles/_variables.scss",
+		"./styles/global": "./dist/styles/_global.scss",
+		"./styles/layout": "./dist/styles/_layout.scss",
+		"./styles/navigation": "./dist/styles/_navigation.scss",
+		"./styles/components": "./dist/styles/_components.scss",
+		"./styles/code-rendering": "./dist/styles/_code-rendering.scss",
+		"./styles/mermaid": "./dist/styles/_mermaid.scss",
+		"./styles/root": "./dist/styles/_root.scss"
 	},
 	"files": [
 		"dist",
@@ -69,6 +76,7 @@
 	},
 	"dependencies": {
 		"@floating-ui/dom": "^1.7.4",
-		"highlight.js": "^11.11.1"
+		"highlight.js": "^11.11.1",
+		"mermaid": "^11.12.1"
 	}
 }

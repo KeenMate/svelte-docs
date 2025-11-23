@@ -1,0 +1,18 @@
+// CSS Custom Properties
+// Runtime theming variables that can be overridden dynamically
+
+@use './variables' as *;
+
+:root {
+	--docs-primary: #{$primary-color};
+	--docs-primary-rgb: #{$primary-color-rgb};
+	--docs-secondary: #{$secondary-color};
+	--docs-secondary-rgb: #{$secondary-color-rgb};
+	--docs-dark: #{$dark-color};
+	--docs-light: #{$light-color};
+	--docs-border: #{$border-color};
+	--docs-body-color: #{$body-color};
+	--navbar-height: #{$navbar-height};
+	--sidebar-width: #{$sidebar-width};
+	--footer-height: #{$footer-height};
+}

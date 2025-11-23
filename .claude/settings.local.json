@@ -17,7 +17,8 @@
       "Read(//c/Git/KM/svelte-switch-showcase/src/routes/**)",
       "Read(//c/Git/KM/svelte-switch-showcase/src/**)",
       "Read(//c/Git/KM/svelte-switch-showcase/**)",
-      "Read(//c/Git/KM/svelte-spa-router-showcase/**)"
+      "Read(//c/Git/KM/svelte-spa-router-showcase/**)",
+      "Bash(npm run build:css:*)"
     ],
     "deny": [],
     "ask": []

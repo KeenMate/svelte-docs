@@ -5,6 +5,111 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.0.0-rc08] - 2025-11-22
+
+### Added
+- **SCSS Module Exports** - All SCSS partials now available as individual exports
+  - `@keenmate/svelte-docs/styles/variables` - SCSS variables only
+  - `@keenmate/svelte-docs/styles/global` - Global styles partial
+  - `@keenmate/svelte-docs/styles/layout` - Layout styles partial
+  - `@keenmate/svelte-docs/styles/navigation` - Navigation styles partial
+  - `@keenmate/svelte-docs/styles/components` - Component styles partial
+  - `@keenmate/svelte-docs/styles/code-rendering` - Code block styles partial
+  - `@keenmate/svelte-docs/styles/mermaid` - Mermaid chart styles partial
+  - `@keenmate/svelte-docs/styles/root` - CSS custom properties partial
+  - Allows users to selectively import and customize individual modules
+  - Users can override variables and build custom themes
+
+- **SCSS Variable Expansion** - Comprehensive variable system for better theming
+  - Added 48 new SCSS variables for improved customization
+  - Gray scale colors: `$gray-600`, `$gray-500`
+  - Code header colors: `$code-header-bg`, `$code-header-border`, `$code-button-color`
+  - Inline code color: `$code-inline-color`
+  - Body background: `$body-bg-color`
+  - Syntax highlighting: 10 syntax color variables (`$syntax-keyword-color`, `$syntax-string-color`, etc.)
+  - Spacing system: 6 spacing variables (`$spacing-xs` through `$spacing-2xl`)
+  - Mermaid chart colors: `$mermaid-bg-color`, chart error colors
+  - Opacity scale: `$opacity-light`, `$opacity-medium`, `$opacity-heavy`
+  - Navigation utilities: `$navbar-brand-offset`, scrollbar colors, backdrop colors
+
+### Changed
+- **SCSS Variable Standardization** - Replaced hardcoded values with variables throughout
+  - `_global.scss`: Body background now uses `$body-bg-color`
+  - `_navigation.scss`: Navbar brand offset, opacity, and scrollbar colors use variables
+  - `_components.scss`: Spacing, colors, and code styling use variables
+  - `_code-rendering.scss`: All code header/button colors and syntax highlighting use variables
+  - `_mermaid.scss`: All chart colors, spacing, and error states use variables
+  - 80+ hardcoded values replaced with semantic variables
+  - Improved consistency across all SCSS files
+
+- **Component Style Consolidation** - Moved all component-specific styles to SCSS partials
+  - Removed `<style>` blocks from `CodeBlock.svelte` (~52 lines)
+  - Removed `<style>` blocks from `Card.svelte` - styles moved to `_components.scss` (~34 lines)
+  - Removed `<style>` blocks from `FeatureCard.svelte` - styles moved to `_components.scss` (~50 lines)
+  - Removed `<style>` blocks from `CardGrid.svelte` - styles moved to `_components.scss` (~11 lines)
+  - Removed `<style>` blocks from `MenuItem.svelte` - styles moved to `_navigation.scss` (~135 lines)
+  - All components now use centralized SCSS files for consistent theming
+  - Replaced hardcoded values in component styles with SCSS variables
+  - Better maintainability and single source of truth for styling (~280 lines consolidated)
+
+## [1.0.0-rc07] - 2025-11-22
+
+### Added
+- **MermaidChart Component** - Interactive diagram and chart rendering
+  - Integrated Mermaid.js library (v11.12.1) for creating diagrams from text definitions
+  - Support for flowcharts, sequence diagrams, class diagrams, state diagrams, and more
+  - `chartDefinition` prop for Mermaid syntax input
+  - `titleText` prop for optional chart title
+  - `themeType` prop with theme options: 'default', 'dark', 'forest', 'neutral'
+  - Automatic reactive re-rendering on chart definition or theme changes
+  - Error handling with user-friendly error messages
+  - Unique chart ID generation to prevent conflicts
+  - Uses Svelte 5 `$effect` for reactive chart rendering
+
+- **Card Component** - Flexible Bootstrap-based card component
+  - `titleText` and `subtitleText` props for card content
+  - `variantType` prop for background colors (primary, secondary, success, info, warning, danger, light, dark)
+  - `borderVariantType` prop for border color variants
+  - `hasHoverEffect` prop for interactive hover animation (lift and shadow)
+  - Three snippet slots: `headerContent`, `bodyContent`, `footerContent`
+  - Image support with `imageUrl`, `imageAltText`, and `imagePosition` ('top' | 'bottom')
+  - Scoped component styles with smooth transitions
+  - Full Bootstrap card structure with header, body, and footer sections
+
+- **Demo Pages** - Comprehensive component showcases
+  - `/card-demo` route demonstrating Card component variants and features
+  - `/mermaid-demo` route showcasing MermaidChart capabilities with various diagram types
+
+- **ShowcaseSection Flexible Layout** - Support for 2-column and 3-column layouts with configurable widths
+  - New `columnCountType` prop (2 | 3) to select layout mode (default: 3)
+  - New `leftColumnSize`, `rightColumnSize`, `middleColumnSize` props for custom Bootstrap grid column widths
+  - Automatic column size calculation (right column auto-calculated if not specified)
+  - Validation ensures columns sum to 12 (Bootstrap requirement) with console warnings
+  - Default column sizes: 4-4-4 for 3-column, 6-6 for 2-column layouts
+  - Full responsive support: all layouts auto-stack to full-width on mobile (< 992px)
+
+### Changed
+- **SCSS Architecture Refactoring** - Modular file structure for improved maintainability
+  - Split monolithic `main.scss` (899 lines) into 7 focused partial files
+  - New structure: `_root.scss` (CSS custom properties), `_global.scss` (typography), `_layout.scss` (main wrapper), `_navigation.scss` (navbar/sidebar/footer), `_components.scss` (cards/showcase), `_code-rendering.scss` (code blocks/highlight.js), `_mermaid.scss` (mermaid charts)
+  - `main.scss` now acts as central import hub using modern `@use` syntax
+  - No breaking changes - compilation output remains identical
+  - Improved code organization and easier maintenance
+  - Better developer experience when working with specific style sections
+
+- **Navigation Configuration** - Updated sidebar menu links
+  - Added "Card Demo" link to showcase Card component features
+  - Added "Mermaid Demo" link to showcase MermaidChart diagram capabilities
+  - Renamed "Anchor Demo" to "Showcase Demo" for clarity
+
+- **ShowcaseSection Column Title Props** - Simplified naming convention ⚠️ **BREAKING CHANGE**
+  - Renamed `demoColumnTitle` → `col1Title` (default: "Demo")
+  - Renamed `controlsColumnTitle` → `col2Title` (default: "Controls")
+  - Renamed `descriptionColumnTitle` → `col3Title` (default: "Description")
+  - Existing code using custom column titles needs prop name updates
+
 ## [1.0.0-rc06] - 2025-11-07
 
 ### Added

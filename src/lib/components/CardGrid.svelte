@@ -12,15 +12,3 @@
 <div class="row g-4 card-grid">
 	{@render children?.()}
 </div>
-
-<style>
-	.card-grid {
-		margin-top: 2rem;
-		margin-bottom: 2rem;
-	}
-
-	/* Ensure all cards in grid have same height */
-	:global(.card-grid .card) {
-		height: 100%;
-	}
-</style>

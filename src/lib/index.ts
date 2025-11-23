@@ -8,8 +8,10 @@ export { default as CodeRenderer } from './components/CodeRenderer.svelte';
 export { default as ShowcaseSection } from './components/ShowcaseSection.svelte';
 export { default as CodeShowcase } from './components/CodeShowcase.svelte';
 export { default as ConfigProvider } from './components/ConfigProvider.svelte';
+export { default as Card } from './components/Card.svelte';
 export { default as FeatureCard } from './components/FeatureCard.svelte';
 export { default as CardGrid } from './components/CardGrid.svelte';
+export { default as MermaidChart } from './components/MermaidChart.svelte';
 
 // Configuration exports
 export type {

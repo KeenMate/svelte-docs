@@ -30,7 +30,9 @@ const showcaseConfig: PartialDocsConfig = {
     main: [
       { label: "Home", href: "/", icon: "🏠" },
       { label: "Menu Demo", href: "/menu-example", icon: "📋" },
-      { label: "Anchor Demo", href: "/anchor-demo", icon: "🔗" },
+      { label: "Showcase Demo", href: "/anchor-demo", icon: "🔗" },
+      { label: "Card Demo", href: "/card-demo", icon: "🃏" },
+      { label: "Mermaid Demo", href: "/mermaid-demo", icon: "📊" },
       { label: "HLJS Test", href: "/hljs-test", icon: "🔬" },
       {
         label: "Page Metadata",

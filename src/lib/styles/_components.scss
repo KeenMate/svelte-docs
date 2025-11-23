@@ -1,0 +1,227 @@
+// Component Styles
+// Showcase section, cards, jumbotron, and utility classes
+
+@use './variables' as *;
+
+// Showcase Section Styles
+.showcase-section {
+	margin-bottom: $spacing-2xl;
+
+	h2 {
+		color: var(--docs-secondary);
+		margin-bottom: $spacing-sm;
+	}
+
+	.controls-container {
+		padding: $spacing-sm;
+
+		.form-group {
+			margin-bottom: 1rem;
+		}
+
+		.form-label {
+			font-weight: 500;
+			color: var(--docs-secondary);
+			margin-bottom: 0.25rem;
+		}
+
+		.code-block {
+			margin: 0;
+		}
+	}
+
+	.description-container {
+		padding: $spacing-sm;
+		font-size: 0.95rem;
+
+		h6 {
+			color: $gray-600;
+			font-weight: 600;
+			margin-top: $spacing-md;
+			margin-bottom: $spacing-sm;
+		}
+
+		code {
+			background-color: var(--docs-light);
+			padding: 0.2rem 0.4rem;
+			border-radius: 0.25rem;
+			font-size: 0.875em;
+			font-family: $font-family-monospace;
+			color: $code-inline-color;
+		}
+
+		pre {
+			background-color: $pre-bg-color;
+			color: $pre-text-color;
+			padding: $spacing-md;
+			border-radius: $pre-border-radius;
+			overflow-x: auto;
+			margin: $spacing-md 0;
+
+			code {
+				background-color: transparent;
+				padding: 0;
+				color: inherit;
+			}
+		}
+	}
+}
+
+// Card Styles
+.card {
+	border: 1px solid rgba(0, 0, 0, 0.125);
+	border-radius: $pre-border-radius;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: all 0.2s ease;
+
+	&:hover {
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
+	}
+
+	.card-title {
+		color: var(--docs-secondary);
+		margin-bottom: 0.75rem;
+		font-weight: 600;
+	}
+
+	.card-subtitle {
+		margin-top: -0.375rem;
+		font-size: 0.875rem;
+	}
+
+	.card-img-top,
+	.card-img-bottom {
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+}
+
+// Card with hover effect
+.card-hover {
+	transition: all 0.3s ease;
+	cursor: pointer;
+
+	&:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+	}
+}
+
+// Feature Card Styles
+.feature-card {
+	transition: all 0.3s ease;
+	border: 1px solid rgba(0, 0, 0, 0.125);
+	height: 100%;
+
+	&:not(.disabled):hover {
+		transform: translateY(-5px);
+		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+		border-color: var(--bs-primary);
+	}
+
+	&.disabled {
+		opacity: $opacity-light;
+		background-color: $light-color;
+	}
+
+	.feature-icon {
+		font-size: 1.5rem;
+		line-height: 1;
+		display: inline-block;
+		flex-shrink: 0;
+	}
+
+	&:not(.disabled):hover .feature-icon {
+		transform: scale(1.1);
+		transition: transform 0.2s ease;
+	}
+
+	.card-body {
+		min-height: 200px;
+	}
+
+	.card-title {
+		color: var(--bs-dark);
+		font-weight: 600;
+	}
+
+	.card-text {
+		color: $gray-500;
+		line-height: 1.6;
+		margin-bottom: $spacing-md;
+	}
+
+	.mt-auto {
+		margin-top: auto !important;
+	}
+}
+
+// Card Grid Styles
+.card-grid {
+	margin-top: $spacing-xl;
+	margin-bottom: $spacing-xl;
+
+	// Ensure all cards in grid have same height
+	.card {
+		height: 100%;
+	}
+}
+
+// Jumbotron Styles
+.jumbotron {
+	background-color: var(--docs-light) !important;
+	border: 1px solid var(--docs-border);
+
+	.display-4 {
+		color: var(--docs-secondary);
+		font-weight: 600;
+	}
+
+	.lead {
+		color: $gray-500;
+	}
+
+	hr {
+		border-color: var(--docs-border);
+	}
+}
+
+// Utility Classes
+.text-primary {
+	color: var(--docs-primary) !important;
+}
+
+.text-secondary {
+	color: var(--docs-secondary) !important;
+}
+
+.bg-primary {
+	background-color: var(--docs-primary) !important;
+}
+
+.bg-secondary {
+	background-color: var(--docs-secondary) !important;
+}
+
+.btn-primary {
+	background-color: var(--docs-primary);
+	border-color: var(--docs-primary);
+
+	&:hover {
+		background-color: $color-primary-dark;
+		border-color: $color-primary-dark;
+	}
+}
+
+.btn-outline-primary {
+	color: var(--docs-primary);
+	border-color: var(--docs-primary);
+
+	&:hover {
+		background-color: var(--docs-primary);
+		border-color: var(--docs-primary);
+	}
+}

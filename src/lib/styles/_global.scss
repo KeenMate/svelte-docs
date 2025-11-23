@@ -1,0 +1,142 @@
+// Global Styles
+// Typography, lists, links, tables, and base element styles
+
+@use './variables' as *;
+
+body {
+	margin: 0;
+	padding: 0;
+	padding-top: var(--navbar-height);
+	font-family: $font-family-base;
+	color: var(--docs-body-color);
+	line-height: 1.6;
+	background-color: $body-bg-color;
+}
+
+// Global Typography Styles
+h1 {
+	color: $heading-color-h1;
+	margin-top: $h1-margin-top;
+	margin-bottom: $h1-margin-bottom;
+}
+
+h2 {
+	color: $heading-color-h2;
+	margin-top: $h2-margin-top;
+	margin-bottom: $h2-margin-bottom;
+}
+
+h3 {
+	color: $heading-color-h3;
+	margin-top: $h3-margin-top;
+	margin-bottom: $h3-margin-bottom;
+}
+
+h4 {
+	color: $heading-color-h4;
+	margin-top: $h4-margin-top;
+	margin-bottom: $h4-margin-bottom;
+}
+
+h5 {
+	color: $heading-color-h5;
+	margin-top: $h5-margin-top;
+	margin-bottom: $h5-margin-bottom;
+}
+
+h6 {
+	color: $heading-color-h6;
+	margin-top: $h6-margin-top;
+	margin-bottom: $h6-margin-bottom;
+}
+
+// Remove top margin from first heading in content
+h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child {
+	margin-top: 0;
+}
+
+// Paragraph styling
+p {
+	margin-bottom: $paragraph-margin-bottom;
+}
+
+// Code styling
+code {
+	background-color: $code-bg-color;
+	padding: $code-padding;
+	border-radius: $code-border-radius;
+	font-family: $font-family-monospace;
+	font-size: $code-font-size;
+}
+
+pre {
+	background-color: $pre-bg-color;
+	color: $pre-text-color;
+	padding: $pre-padding;
+	border-radius: $pre-border-radius;
+	overflow-x: auto;
+	margin: $pre-margin;
+}
+
+pre code {
+	background-color: transparent;
+	padding: 0;
+	color: inherit;
+}
+
+// List styling
+ul, ol {
+	padding-left: $list-padding-left;
+	margin-bottom: $list-margin-bottom;
+}
+
+li {
+	margin-bottom: $list-item-margin-bottom;
+}
+
+// Link styling
+a {
+	color: $link-color;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+// Blockquote styling
+blockquote {
+	border-left: 4px solid $border-color-light;
+	margin: $blockquote-margin;
+	padding-left: $blockquote-padding-left;
+	color: $text-muted-color;
+}
+
+// Table styling
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: $table-margin;
+}
+
+th, td {
+	border: 1px solid $border-color-light;
+	padding: 0.5rem;
+	text-align: left;
+}
+
+th {
+	background-color: $table-header-bg;
+	font-weight: 600;
+}
+
+// Global navigation icon consistency
+.nav-link, .navbar-nav .nav-link {
+	// Ensure all navigation icons have consistent width
+	span.me-1, span.me-2 {
+		display: inline-block;
+		width: 1.5rem;
+		text-align: center;
+		flex-shrink: 0; // Prevent icon from shrinking
+	}
+}

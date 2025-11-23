@@ -77,3 +77,52 @@ $pre-border-radius: 0.5rem !default;
 $border-color-light: #e2e8f0 !default;
 $background-color-light: #f8fafc !default;
 $table-header-bg: #f8fafc !default;
+$body-bg-color: #fafafa !default;
+
+// Gray Scale Colors
+$gray-600: #495057 !default;
+$gray-500: #6c757d !default;
+
+// Code Header & Button Colors
+$code-header-bg: #334155 !default;
+$code-header-border: #475569 !default;
+$code-button-color: #94a3b8 !default;
+$code-inline-color: #e83e8c !default;
+
+// Syntax Highlighting Colors (Material Theme)
+$syntax-keyword-color: #c792ea !default;
+$syntax-string-color: #c3e88d !default;
+$syntax-comment-color: #546e7a !default;
+$syntax-number-color: #f78c6c !default;
+$syntax-function-color: #82aaff !default;
+$syntax-variable-color: #f07178 !default;
+$syntax-tag-color: #f07178 !default;
+$syntax-type-color: #ffcb6b !default;
+$syntax-attribute-color: #c792ea !default;
+$syntax-symbol-color: #82aaff !default;
+
+// Spacing System
+$spacing-xs: 0.25rem !default;
+$spacing-sm: 0.5rem !default;
+$spacing-md: 1rem !default;
+$spacing-lg: 1.5rem !default;
+$spacing-xl: 2rem !default;
+$spacing-2xl: 3rem !default;
+
+// Mermaid Chart Colors
+$mermaid-bg-color: #ffffff !default;
+$chart-error-color: #fca5a5 !default;
+$chart-error-bg: #7f1d1d !default;
+$chart-error-text: #fecaca !default;
+
+// Opacity Scale
+$opacity-light: 0.8 !default;
+$opacity-medium: 0.5 !default;
+$opacity-heavy: 0.3 !default;
+
+// Navigation & Layout Utilities
+$navbar-brand-offset: 200px !default;
+$sidebar-backdrop-bg: rgba(0, 0, 0, 0.5) !default;
+$scrollbar-track-bg: rgba(0, 0, 0, 0.2) !default;
+$scrollbar-thumb-bg: rgba(255, 255, 255, 0.3) !default;
+$scrollbar-thumb-hover-bg: rgba(255, 255, 255, 0.5) !default;
