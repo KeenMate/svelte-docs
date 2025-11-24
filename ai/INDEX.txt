@@ -1,0 +1,299 @@
+SVELTE-DOCS AI REFERENCE INDEX
+==============================
+
+QUICK KEYWORD LOOKUP
+--------------------
+Find the right file by keyword, feature, or use case.
+
+FORMAT: keyword → filename
+Multiple keywords per line indicate same file.
+
+GETTING STARTED
+---------------
+installation, setup, npm → getting-started.txt
+sveltekit integration, framework setup → getting-started.txt
+first documentation site → getting-started.txt
+project structure, file organization → getting-started.txt
+package, build, publish → getting-started.txt
+
+CONFIGURATION SYSTEM
+--------------------
+DocsConfig, configuration → configuration.txt
+site metadata, seo → configuration.txt
+company info, branding → configuration.txt
+navigation, menu, sidebar → configuration.txt
+theme customization, colors → configuration.txt
+features toggle, analytics → configuration.txt
+config validation → configuration.txt
+ConfigProvider component → configuration.txt
+
+CORE LAYOUT COMPONENTS
+----------------------
+DocLayout, layout system → components.txt
+ConfigProvider, configuration → components.txt
+Navigation, sidebar, menu → components.txt
+layout structure, page organization → components.txt
+responsive layout, mobile → components.txt
+
+CONTENT COMPONENTS
+------------------
+ShowcaseSection, content sections → components.txt
+CodeShowcase, code examples → components.txt
+CodeBlock, syntax highlighting → components.txt
+FeatureCard, feature display → components.txt
+CardGrid, card layout → components.txt
+MermaidChart, diagrams → components.txt
+Card, simple cards → components.txt
+
+THEMING & STYLING
+-----------------
+SCSS customization → theming-styling.txt
+CSS variables, custom properties → theming-styling.txt
+Bootstrap 5.3 integration → theming-styling.txt
+color scheme, brand colors → theming-styling.txt
+typography, fonts → theming-styling.txt
+component styling → theming-styling.txt
+SCSS variables, _variables.scss → theming-styling.txt
+SSR styles, FOUC prevention → theming-styling.txt
+
+SVELTE 5 PATTERNS
+-----------------
+runes, $state, $derived → getting-started.txt, components.txt
+$derived.by best practices → components.txt
+snippets, children prop → components.txt
+reactivity patterns → components.txt
+svelte 5 migration → getting-started.txt
+
+NAMING CONVENTIONS
+------------------
+property naming, boolean props → components.txt
+isVisible, hasChildren patterns → components.txt
+titleText, descriptionText → components.txt
+variantType, colorType → components.txt
+naming standards → components.txt
+
+CODE FEATURES
+-------------
+syntax highlighting, highlight.js → components.txt
+code examples, showcase → components.txt
+50+ languages support → components.txt
+code block styling → theming-styling.txt
+
+SERVER-SIDE RENDERING
+---------------------
+SSR configuration → getting-started.txt
++layout.server.ts → getting-started.txt
+inline CSS, FOUC prevention → theming-styling.txt
+static site generation → getting-started.txt
+adapter-static → getting-started.txt
+
+BUILD & PACKAGING
+-----------------
+npm run package → getting-started.txt
+npm run build → getting-started.txt
+sass compilation → getting-started.txt
+make publish → getting-started.txt
+dist/ output → getting-started.txt
+
+ANALYTICS & TRACKING
+--------------------
+analytics configuration → configuration.txt
+plausible, gtag, umami → configuration.txt
+statistics script → configuration.txt
+
+NAVIGATION SYSTEM
+-----------------
+NavigationItem interface → configuration.txt
+main menu, footer → configuration.txt
+nested navigation → configuration.txt
+external links → configuration.txt
+badges, tooltips → configuration.txt
+
+TYPESCRIPT INTEGRATION
+----------------------
+config types, interfaces → configuration.txt
+component props typing → components.txt
+type safety → getting-started.txt
+
+COMMON USE CASES
+----------------
+documentation site → getting-started.txt
+API documentation → components.txt
+component library docs → components.txt
+technical documentation → getting-started.txt
+showcase site → components.txt
+
+RESTRICTIONS & PHILOSOPHY
+--------------------------
+no custom CSS → getting-started.txt
+opinionated framework → getting-started.txt
+Bootstrap only → theming-styling.txt
+configuration over customization → configuration.txt
+design constraints → getting-started.txt
+
+FILE DESCRIPTIONS
+-----------------
+getting-started.txt
+  Foundation: Installation, project setup, build commands, Svelte 5 basics
+  Start here for: New projects, setup, architecture overview
+
+configuration.txt
+  Configuration: DocsConfig interface, all config options, validation
+  Start here for: Site settings, navigation, features, analytics
+
+components.txt
+  Components: All layout and content components with examples
+  Start here for: Using components, component APIs, examples
+
+theming-styling.txt
+  Styling: SCSS system, CSS variables, Bootstrap integration, SSR styles
+  Start here for: Customization, branding, colors, fonts
+
+READING ORDER RECOMMENDATIONS
+------------------------------
+Complete beginner:
+1. getting-started.txt
+2. configuration.txt
+3. components.txt
+
+Building a documentation site:
+1. getting-started.txt
+2. configuration.txt
+3. components.txt
+4. theming-styling.txt
+
+Customizing theme:
+1. theming-styling.txt
+2. configuration.txt
+
+Contributing to library:
+1. getting-started.txt
+2. components.txt
+3. theming-styling.txt
+
+CROSS-REFERENCES
+----------------
+Features spanning multiple files:
+
+Configuration
+  → configuration.txt (full config reference)
+  → getting-started.txt (basic setup)
+  → components.txt (ConfigProvider usage)
+
+Theming
+  → theming-styling.txt (SCSS and CSS variables)
+  → configuration.txt (theme config object)
+
+Layout System
+  → components.txt (component reference)
+  → getting-started.txt (basic layout structure)
+
+Navigation
+  → configuration.txt (navigation config)
+  → components.txt (Navigation component)
+
+Code Display
+  → components.txt (CodeBlock, CodeShowcase)
+  → theming-styling.txt (syntax highlighting styles)
+
+QUICK PROBLEM SOLVING
+----------------------
+Problem: How to install and set up?
+→ getting-started.txt
+
+Problem: How to configure site metadata?
+→ configuration.txt (site config)
+
+Problem: How to customize colors/theme?
+→ theming-styling.txt (SCSS variables)
+→ configuration.txt (theme config)
+
+Problem: How to add navigation items?
+→ configuration.txt (NavigationConfig)
+
+Problem: How to display code examples?
+→ components.txt (CodeBlock, CodeShowcase)
+
+Problem: How to add analytics?
+→ configuration.txt (features.analytics)
+
+Problem: Build/package not working?
+→ getting-started.txt (build commands)
+
+Problem: FOUC (flash of unstyled content)?
+→ theming-styling.txt (SSR styles)
+
+Problem: Component not working?
+→ components.txt (component reference)
+
+Problem: Svelte 5 runes confusion?
+→ getting-started.txt (Svelte 5 standards)
+→ components.txt (component examples)
+
+EXAMPLES BY USE CASE
+--------------------
+Simple documentation site:
+→ getting-started.txt (setup)
+→ configuration.txt (basic config)
+→ components.txt (DocLayout)
+
+Component library documentation:
+→ components.txt (ShowcaseSection, CodeShowcase)
+→ configuration.txt (navigation for components)
+
+API documentation:
+→ components.txt (CodeBlock)
+→ configuration.txt (navigation structure)
+
+Branded documentation:
+→ theming-styling.txt (custom colors, fonts)
+→ configuration.txt (company branding)
+
+Multi-page documentation:
+→ getting-started.txt (SvelteKit routes)
+→ configuration.txt (navigation)
+
+ADVANCED FEATURES
+-----------------
+Custom SCSS variables → theming-styling.txt
+CSS custom properties runtime → theming-styling.txt
+Server-side style generation → theming-styling.txt
+Static site optimization → getting-started.txt
+Bootstrap customization → theming-styling.txt
+
+DEVELOPMENT WORKFLOW
+--------------------
+npm run dev → getting-started.txt
+npm run check → getting-started.txt
+npm run build:css → getting-started.txt
+TypeScript validation → getting-started.txt
+Quality assurance → getting-started.txt
+
+ERROR PATTERNS TO AVOID
+-----------------------
+❌ Custom CSS files → getting-started.txt (not allowed)
+❌ Wrong property names → components.txt (naming convention)
+❌ $derived with () syntax → components.txt (use $derived.by)
+❌ Breaking Bootstrap grid → components.txt (use provided components)
+❌ Modifying component internals → getting-started.txt (use config)
+
+ARCHITECTURE NOTES
+------------------
+Component library vs app → getting-started.txt
+Peer dependencies → getting-started.txt
+Export structure → getting-started.txt
+Package system → getting-started.txt
+
+SUPPORT & RESOURCES
+-------------------
+Full documentation:
+→ ../CLAUDE.md (project instructions)
+→ ../README.md (package documentation)
+
+Source code:
+→ ../src/lib/ (library source)
+→ ../src/routes/ (demo routes)
+
+Configuration:
+→ ../src/lib/types/config.ts (type definitions)
+→ ../src/lib/config/example.ts (example configs)

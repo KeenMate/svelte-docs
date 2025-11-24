@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **AI Reference Guide System** - Comprehensive documentation for AI assistants
+  - `ai/INDEX.txt` - Quick reference with keyword lookup and cross-references
+  - `ai/getting-started.txt` - Installation, setup, project structure, and Svelte 5 patterns
+  - `ai/configuration.txt` - Complete DocsConfig reference with all configuration options
+  - `ai/components.txt` - Detailed component documentation with examples and patterns
+  - `ai/theming-styling.txt` - Styling system, SCSS variables, CSS architecture, and customization
+  - Searchable keyword-based navigation system
+  - Common use cases and troubleshooting guides
+  - Best practices and examples for all features
+  - Similar structure to web-daterangepicker AI reference guide
+
 ## [1.0.0-rc08] - 2025-11-22
 
 ### Added

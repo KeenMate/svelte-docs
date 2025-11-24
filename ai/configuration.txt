@@ -1,0 +1,778 @@
+CONFIGURATION GUIDE
+===================
+
+DOCSCONFIG INTERFACE
+--------------------
+The main configuration object for svelte-docs.
+
+Structure:
+{
+  site: SiteConfig;
+  company: CompanyConfig;
+  navigation: NavigationConfig;
+  theme?: ThemeConfig;        // Optional
+  features?: FeaturesConfig;  // Optional
+}
+
+All configuration is TypeScript-typed for safety.
+
+SITE CONFIGURATION
+------------------
+Site metadata and SEO settings.
+
+interface SiteConfig {
+  // Required
+  title: string;                    // Site title
+
+  // Optional
+  description?: string;             // Meta description
+  keywords?: string[];              // SEO keywords
+  author?: string;                  // Site author
+  language?: string;                // Language code (default: 'en')
+  url?: string;                     // Full site URL
+  baseUrl?: string;                 // Base path
+  ogImage?: string;                 // Open Graph image URL
+  twitterHandle?: string;           // Twitter handle (@username)
+}
+
+EXAMPLE:
+{
+  site: {
+    title: 'My Documentation',
+    description: 'Comprehensive guide to using our API',
+    keywords: ['api', 'documentation', 'guide'],
+    author: 'My Company',
+    language: 'en',
+    url: 'https://docs.example.com',
+    ogImage: 'https://docs.example.com/og-image.png',
+    twitterHandle: '@mycompany'
+  }
+}
+
+SEO OPTIMIZATION:
+- title: Shown in browser tab, search results
+- description: Meta description for search engines
+- keywords: Help with search indexing
+- ogImage: Image shown when sharing on social media
+- twitterHandle: Links to Twitter account
+
+COMPANY CONFIGURATION
+---------------------
+Company information and branding.
+
+interface CompanyConfig {
+  // Required
+  name: string;                     // Company name
+
+  // Optional
+  website?: string;                 // Company website URL
+  logo?: string;                    // Logo image URL
+  logoAlt?: string;                 // Logo alt text
+  email?: string;                   // Contact email
+  phone?: string;                   // Contact phone
+  address?: string;                 // Physical address
+
+  // Social media links
+  social?: {
+    github?: string;
+    twitter?: string;
+    linkedin?: string;
+    discord?: string;
+    slack?: string;
+    youtube?: string;
+    facebook?: string;
+    instagram?: string;
+  };
+}
+
+EXAMPLE:
+{
+  company: {
+    name: 'Keenmate',
+    website: 'https://keenmate.com',
+    logo: '/logo.svg',
+    logoAlt: 'Keenmate Logo',
+    email: 'hello@keenmate.com',
+    phone: '+1-555-123-4567',
+    social: {
+      github: 'https://github.com/keenmate',
+      twitter: 'https://twitter.com/keenmate',
+      linkedin: 'https://linkedin.com/company/keenmate',
+      discord: 'https://discord.gg/keenmate'
+    }
+  }
+}
+
+SOCIAL LINKS:
+- Used in footer and social navigation
+- Only include platforms you want to display
+- Must be full URLs
+
+NAVIGATION CONFIGURATION
+------------------------
+Menu structure and navigation items.
+
+interface NavigationConfig {
+  main: NavigationItem[];           // Required: main menu
+  footer?: NavigationItem[];        // Optional: footer links
+  social?: NavigationItem[];        // Optional: social links
+}
+
+If social not provided, uses company.social automatically.
+
+NAVIGATIONITEM INTERFACE:
+{
+  label: string;                    // Required: display text
+  href: string;                     // Required: URL or path
+  icon?: string;                    // Optional: icon (emoji or class)
+  external?: boolean;               // Optional: external link?
+  target?: string;                  // Optional: link target
+  children?: NavigationItem[];      // Optional: nested items
+  badge?: string;                   // Optional: badge text
+  disabled?: boolean;               // Optional: disable link
+  tooltip?: string;                 // Optional: tooltip text
+}
+
+SIMPLE NAVIGATION:
+{
+  navigation: {
+    main: [
+      { label: 'Home', href: '/' },
+      { label: 'Docs', href: '/docs' },
+      { label: 'API', href: '/api' }
+    ]
+  }
+}
+
+WITH ICONS:
+{
+  navigation: {
+    main: [
+      { label: 'Home', href: '/', icon: '🏠' },
+      { label: 'Getting Started', href: '/start', icon: '🚀' },
+      { label: 'Components', href: '/components', icon: '🧩' }
+    ]
+  }
+}
+
+NESTED NAVIGATION:
+{
+  navigation: {
+    main: [
+      { label: 'Home', href: '/' },
+      {
+        label: 'Documentation',
+        href: '/docs',
+        icon: '📖',
+        children: [
+          { label: 'Installation', href: '/docs/installation' },
+          { label: 'Configuration', href: '/docs/configuration' },
+          { label: 'Usage', href: '/docs/usage' }
+        ]
+      },
+      { label: 'API Reference', href: '/api' }
+    ]
+  }
+}
+
+EXTERNAL LINKS:
+{
+  navigation: {
+    main: [
+      { label: 'Home', href: '/' },
+      {
+        label: 'GitHub',
+        href: 'https://github.com/mycompany/myproject',
+        icon: '📁',
+        external: true,
+        target: '_blank'
+      }
+    ]
+  }
+}
+
+WITH BADGES:
+{
+  navigation: {
+    main: [
+      { label: 'Home', href: '/' },
+      { label: 'Beta Features', href: '/beta', badge: 'New' },
+      { label: 'Deprecated', href: '/old', disabled: true }
+    ]
+  }
+}
+
+FOOTER NAVIGATION:
+{
+  navigation: {
+    main: [ /* main menu */ ],
+    footer: [
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms of Service', href: '/terms' },
+      { label: 'Contact', href: '/contact' }
+    ]
+  }
+}
+
+THEME CONFIGURATION
+-------------------
+Customize colors, fonts, and component styling.
+
+interface ThemeConfig {
+  colors?: {
+    primary?: string;               // Primary brand color
+    primaryDark?: string;           // Dark variant
+    secondary?: string;             // Secondary color
+    dark?: string;                  // Dark theme color
+    light?: string;                 // Light theme color
+    success?: string;               // Success color
+    warning?: string;               // Warning color
+    danger?: string;                // Danger color
+    info?: string;                  // Info color
+  };
+
+  fonts?: {
+    body?: string;                  // Body font family
+    heading?: string;               // Heading font family
+    mono?: string;                  // Monospace font family
+  };
+
+  components?: {
+    navbar?: {
+      height?: string;              // Navbar height
+      background?: string;          // Background color
+    };
+    sidebar?: {
+      width?: string;               // Sidebar width
+      background?: string;          // Background color
+    };
+    footer?: {
+      background?: string;          // Background color
+      height?: string;              // Footer height
+    };
+    tooltip?: {
+      isEnabled?: boolean;          // Enable tooltips
+      placement?: 'top' | 'right' | 'bottom' | 'left';
+      showOnMobile?: boolean;       // Show on mobile
+      showDelay?: number;           // Show delay (ms)
+      hideDelay?: number;           // Hide delay (ms)
+      backgroundColor?: string;     // Background color
+      textColor?: string;           // Text color
+      fontSize?: string;            // Font size
+      maxWidth?: string;            // Max width
+      zIndex?: number;              // Z-index
+      borderRadius?: string;        // Border radius
+      padding?: string;             // Padding
+      arrowSize?: string;           // Arrow size
+    };
+  };
+}
+
+DEFAULT THEME:
+{
+  colors: {
+    primary: '#00A7E1',
+    primaryDark: '#007EA7',
+    secondary: '#003459',
+    dark: '#00171F',
+    light: '#FFFFFF',
+    success: '#198754',
+    warning: '#ffc107',
+    danger: '#dc3545',
+    info: '#0dcaf0'
+  },
+  fonts: {
+    body: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    heading: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    mono: '"Courier New", Monaco, "Cascadia Code", monospace'
+  },
+  components: {
+    navbar: {
+      height: '56px'
+    },
+    sidebar: {
+      width: '280px'
+    },
+    footer: {
+      height: '60px'
+    },
+    tooltip: {
+      isEnabled: true,
+      placement: 'right',
+      showOnMobile: false
+    }
+  }
+}
+
+CUSTOM BRAND COLORS:
+{
+  theme: {
+    colors: {
+      primary: '#6366f1',           // Indigo
+      primaryDark: '#4f46e5',
+      secondary: '#1e293b',         // Slate
+      success: '#10b981',           // Emerald
+      danger: '#ef4444'             // Red
+    }
+  }
+}
+
+CUSTOM FONTS:
+{
+  theme: {
+    fonts: {
+      body: 'Inter, system-ui, sans-serif',
+      heading: 'Inter, system-ui, sans-serif',
+      mono: '"Fira Code", "Cascadia Code", monospace'
+    }
+  }
+}
+
+CUSTOM COMPONENT SIZING:
+{
+  theme: {
+    components: {
+      navbar: {
+        height: '64px'              // Taller navbar
+      },
+      sidebar: {
+        width: '320px'              // Wider sidebar
+      }
+    }
+  }
+}
+
+TOOLTIP CUSTOMIZATION:
+{
+  theme: {
+    components: {
+      tooltip: {
+        isEnabled: true,
+        placement: 'top',
+        showOnMobile: true,
+        showDelay: 500,
+        hideDelay: 200,
+        backgroundColor: 'rgba(0, 0, 0, 0.95)',
+        textColor: 'white',
+        fontSize: '0.875rem',
+        maxWidth: '300px',
+        borderRadius: '0.5rem',
+        padding: '0.75rem 1rem'
+      }
+    }
+  }
+}
+
+FEATURES CONFIGURATION
+----------------------
+Toggle features and integrations.
+
+interface FeaturesConfig {
+  // Feature toggles
+  search?: boolean;                 // Enable search
+  tableOfContents?: boolean;        // Enable TOC
+  breadcrumbs?: boolean;            // Enable breadcrumbs
+  editOnGitHub?: boolean;           // Enable edit links
+  lastModified?: boolean;           // Show last modified
+  nextPrevious?: boolean;           // Next/prev navigation
+  copyCode?: boolean;               // Copy code button
+  darkMode?: boolean;               // Dark mode toggle
+
+  // Analytics
+  analytics?: {
+    gtag?: string;                  // Google Analytics ID
+    plausible?: string;             // Plausible domain
+    umami?: {                       // Umami config
+      url: string;
+      id: string;
+    };
+  };
+
+  // GitHub integration
+  github?: {
+    repo: string;                   // Repository (owner/repo)
+    branch?: string;                // Branch (default: main)
+    docsPath?: string;              // Docs path in repo
+  };
+}
+
+DEFAULT FEATURES:
+{
+  search: true,
+  tableOfContents: true,
+  breadcrumbs: true,
+  copyCode: true,
+  darkMode: false,
+  editOnGitHub: false,
+  lastModified: false,
+  nextPrevious: true
+}
+
+ENABLE ALL FEATURES:
+{
+  features: {
+    search: true,
+    tableOfContents: true,
+    breadcrumbs: true,
+    editOnGitHub: true,
+    lastModified: true,
+    nextPrevious: true,
+    copyCode: true,
+    darkMode: true
+  }
+}
+
+GOOGLE ANALYTICS:
+{
+  features: {
+    analytics: {
+      gtag: 'GA-XXXXXXXXXX'
+    }
+  }
+}
+
+Script injected: <script async src="https://www.googletagmanager.com/gtag/js?id=GA-XXX"></script>
+
+PLAUSIBLE ANALYTICS:
+{
+  features: {
+    analytics: {
+      plausible: 'docs.example.com'
+    }
+  }
+}
+
+Script injected: <script defer data-domain="docs.example.com" src="https://plausible.io/js/script.js"></script>
+
+UMAMI ANALYTICS:
+{
+  features: {
+    analytics: {
+      umami: {
+        url: 'https://analytics.example.com',
+        id: 'your-site-id'
+      }
+    }
+  }
+}
+
+GITHUB INTEGRATION:
+{
+  features: {
+    editOnGitHub: true,
+    github: {
+      repo: 'mycompany/my-docs',
+      branch: 'main',
+      docsPath: 'src/content'
+    }
+  }
+}
+
+Adds "Edit on GitHub" links to pages.
+
+COMPLETE CONFIGURATION EXAMPLE
+-------------------------------
+Full configuration with all options:
+
+import type { DocsConfig } from '@keenmate/svelte-docs';
+
+export const docsConfig: DocsConfig = {
+  site: {
+    title: 'My Documentation',
+    description: 'Comprehensive documentation for my project',
+    keywords: ['documentation', 'api', 'guide'],
+    author: 'My Company',
+    language: 'en',
+    url: 'https://docs.example.com',
+    ogImage: 'https://docs.example.com/og-image.png',
+    twitterHandle: '@mycompany'
+  },
+
+  company: {
+    name: 'My Company',
+    website: 'https://example.com',
+    logo: '/logo.svg',
+    logoAlt: 'My Company Logo',
+    email: 'support@example.com',
+    phone: '+1-555-123-4567',
+    social: {
+      github: 'https://github.com/mycompany',
+      twitter: 'https://twitter.com/mycompany',
+      linkedin: 'https://linkedin.com/company/mycompany',
+      discord: 'https://discord.gg/mycompany'
+    }
+  },
+
+  navigation: {
+    main: [
+      { label: 'Home', href: '/', icon: '🏠' },
+      { label: 'Quick Start', href: '/start', icon: '⚡', badge: 'New' },
+      {
+        label: 'Documentation',
+        href: '/docs',
+        icon: '📖',
+        children: [
+          { label: 'Installation', href: '/docs/installation' },
+          { label: 'Configuration', href: '/docs/configuration' },
+          { label: 'Usage', href: '/docs/usage' }
+        ]
+      },
+      { label: 'API Reference', href: '/api', icon: '📚' },
+      {
+        label: 'GitHub',
+        href: 'https://github.com/mycompany/myproject',
+        icon: '📁',
+        external: true
+      }
+    ],
+    footer: [
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms of Service', href: '/terms' },
+      { label: 'Contact', href: '/contact' }
+    ]
+  },
+
+  theme: {
+    colors: {
+      primary: '#6366f1',
+      primaryDark: '#4f46e5',
+      secondary: '#1e293b',
+      success: '#10b981',
+      danger: '#ef4444'
+    },
+    fonts: {
+      body: 'Inter, system-ui, sans-serif',
+      heading: 'Inter, system-ui, sans-serif',
+      mono: '"Fira Code", monospace'
+    },
+    components: {
+      navbar: {
+        height: '64px'
+      },
+      sidebar: {
+        width: '320px'
+      }
+    }
+  },
+
+  features: {
+    search: true,
+    tableOfContents: true,
+    breadcrumbs: true,
+    editOnGitHub: true,
+    lastModified: true,
+    nextPrevious: true,
+    copyCode: true,
+    darkMode: true,
+    analytics: {
+      plausible: 'docs.example.com'
+    },
+    github: {
+      repo: 'mycompany/my-docs',
+      branch: 'main',
+      docsPath: 'src/content'
+    }
+  }
+};
+
+MINIMAL CONFIGURATION EXAMPLE
+------------------------------
+Bare minimum required:
+
+import type { DocsConfig } from '@keenmate/svelte-docs';
+
+export const docsConfig: DocsConfig = {
+  site: {
+    title: 'My Docs'
+  },
+  company: {
+    name: 'My Company'
+  },
+  navigation: {
+    main: [
+      { label: 'Home', href: '/' },
+      { label: 'Docs', href: '/docs' }
+    ]
+  }
+};
+
+CONFIGURATION VALIDATION
+-------------------------
+Validate your configuration:
+
+import { validateConfig } from '@keenmate/svelte-docs';
+
+const errors = validateConfig(docsConfig);
+
+if (errors.length > 0) {
+  console.error('Configuration errors:', errors);
+}
+
+VALIDATION CHECKS:
+- site.title is required
+- company.name is required
+- navigation.main must contain at least one item
+- All navigation items must have label and href
+- URLs must be valid
+- Social links must be valid URLs
+
+CONFIGURATION MERGING
+----------------------
+Merge with defaults:
+
+import { mergeConfig, defaultConfig } from '@keenmate/svelte-docs';
+
+const merged = mergeConfig(defaultConfig, docsConfig);
+
+Useful for extending default config with your custom values.
+
+USING CONFIGPROVIDER
+---------------------
+Provide config to components:
+
+<script lang="ts">
+  import { ConfigProvider, DocLayout } from '@keenmate/svelte-docs';
+  import { docsConfig } from '$lib/docs-config';
+</script>
+
+<ConfigProvider config={docsConfig}>
+  <DocLayout>
+    <h1>Content</h1>
+  </DocLayout>
+</ConfigProvider>
+
+Or pass directly to DocLayout:
+
+<DocLayout config={docsConfig}>
+  <h1>Content</h1>
+</DocLayout>
+
+ACCESSING CONFIG IN COMPONENTS
+-------------------------------
+Access config from store:
+
+<script lang="ts">
+  import { docsConfigStore } from '@keenmate/svelte-docs/stores';
+
+  const config = $docsConfigStore;
+</script>
+
+<p>Site title: {config.site.title}</p>
+
+DYNAMIC CONFIGURATION
+---------------------
+Update config at runtime:
+
+<script lang="ts">
+  import { docsConfigStore } from '@keenmate/svelte-docs/stores';
+  import { docsConfig } from '$lib/docs-config';
+
+  // Initialize
+  docsConfigStore.set(docsConfig);
+
+  // Update later
+  function updateTheme() {
+    docsConfigStore.update(config => ({
+      ...config,
+      theme: {
+        ...config.theme,
+        colors: {
+          ...config.theme?.colors,
+          primary: '#ff0000'
+        }
+      }
+    }));
+  }
+</script>
+
+ENVIRONMENT-SPECIFIC CONFIG
+----------------------------
+Different configs for dev/prod:
+
+import type { DocsConfig } from '@keenmate/svelte-docs';
+import { dev } from '$app/environment';
+
+const baseConfig = {
+  site: {
+    title: 'My Docs'
+  },
+  company: {
+    name: 'My Company'
+  },
+  navigation: {
+    main: [
+      { label: 'Home', href: '/' }
+    ]
+  }
+};
+
+export const docsConfig: DocsConfig = {
+  ...baseConfig,
+  site: {
+    ...baseConfig.site,
+    url: dev ? 'http://localhost:5173' : 'https://docs.example.com'
+  },
+  features: {
+    analytics: dev ? {} : {
+      plausible: 'docs.example.com'
+    }
+  }
+};
+
+Only enable analytics in production.
+
+COMMON CONFIGURATION PATTERNS
+------------------------------
+Multi-language setup:
+- Create separate config files per language
+- Switch based on route or user preference
+
+Multi-product:
+- Separate configs for different products
+- Share common company/theme config
+
+White-label:
+- Theme config from database
+- Dynamic company branding
+
+TROUBLESHOOTING
+---------------
+Type errors:
+→ Import type: import type { DocsConfig } from '@keenmate/svelte-docs';
+
+Missing required fields:
+→ Run validateConfig() to see errors
+
+URLs not working:
+→ Ensure full URLs for external links
+→ Use relative paths for internal links
+
+Navigation not showing:
+→ Check navigation.main has items
+→ Verify label and href are set
+
+Theme not applying:
+→ Check CSS import in layout
+→ Verify theme config structure
+
+Analytics not tracking:
+→ Check correct format for analytics config
+→ Verify domain/ID is correct
+
+BEST PRACTICES
+--------------
+1. Keep config in separate file
+2. Use TypeScript for type safety
+3. Validate config during build
+4. Use environment variables for sensitive data
+5. Document custom config extensions
+6. Test navigation structure
+7. Validate all URLs
+8. Keep navigation depth reasonable (max 2-3 levels)
+
+RESOURCES
+---------
+- Type definitions → ../src/lib/types/config.ts
+- Example configs → ../src/lib/config/example.ts
+- Default config → src/lib/types/config.ts (defaultConfig)
+- Validation → src/lib/types/config.ts (validateConfig)

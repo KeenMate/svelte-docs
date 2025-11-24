@@ -1,0 +1,914 @@
+COMPONENTS REFERENCE
+====================
+
+COMPONENT OVERVIEW
+------------------
+svelte-docs provides two categories of components:
+
+LAYOUT COMPONENTS:
+- DocLayout - Main page layout with navbar, sidebar, footer
+- ConfigProvider - Configuration context provider
+- Navigation - Sidebar navigation (internal to DocLayout)
+
+CONTENT COMPONENTS:
+- ShowcaseSection - Multi-column content sections
+- CodeShowcase - Tabbed code examples
+- CodeBlock - Single code block with syntax highlighting
+- FeatureCard - Feature display card
+- CardGrid - Grid layout for cards
+- Card - Simple card component
+- MermaidChart - Mermaid diagram renderer
+
+All components use Svelte 5 with runes and follow strict naming conventions.
+
+================================================================================
+DOCLAYOUT COMPONENT
+================================================================================
+Main layout component with navbar, sidebar, and footer.
+
+IMPORT:
+import { DocLayout } from '@keenmate/svelte-docs';
+
+INTERFACE:
+interface Props {
+  titleText?: string;              // Page title (appends to site title)
+  descriptionText?: string;        // Page description (meta tag)
+  isNavigationVisible?: boolean;   // Show/hide sidebar (default: true)
+  areBreadcrumbsVisible?: boolean; // Show/hide breadcrumbs (default: true)
+  children: Snippet;               // Page content
+}
+
+BASIC USAGE:
+<script lang="ts">
+  import { DocLayout } from '@keenmate/svelte-docs';
+  import { docsConfig } from '$lib/docs-config';
+</script>
+
+<DocLayout>
+  <h1>Welcome</h1>
+  <p>My documentation content</p>
+</DocLayout>
+
+WITH PAGE METADATA:
+<DocLayout
+  titleText="Getting Started"
+  descriptionText="Learn how to get started with our library"
+>
+  <h1>Getting Started</h1>
+  <p>Content here</p>
+</DocLayout>
+
+WITHOUT SIDEBAR:
+<DocLayout isNavigationVisible={false}>
+  <h1>Landing Page</h1>
+  <p>Full-width content without sidebar</p>
+</DocLayout>
+
+WITHOUT BREADCRUMBS:
+<DocLayout areBreadcrumbsVisible={false}>
+  <h1>Clean Page</h1>
+  <p>No breadcrumb trail</p>
+</DocLayout>
+
+FEATURES:
+- Responsive navbar with company logo
+- Collapsible sidebar with nested navigation
+- Automatic breadcrumb generation
+- Mobile-friendly with overlay sidebar
+- Footer with company info and social links
+- Persistent sidebar state (localStorage)
+- Tooltips on navigation items
+- Active link highlighting
+
+LAYOUT STRUCTURE:
+┌─────────────────────────────────┐
+│ Navbar (fixed top)              │
+├───────────┬─────────────────────┤
+│           │                     │
+│  Sidebar  │  Main Content       │
+│           │  - Breadcrumbs      │
+│           │  - children         │
+│           │                     │
+├───────────┴─────────────────────┤
+│ Footer                          │
+└─────────────────────────────────┘
+
+SIDEBAR BEHAVIOR:
+- Desktop: Sidebar visible by default, toggle persists
+- Mobile: Sidebar hidden by default, overlay when opened
+- Auto-expands active menu sections
+- Smooth animations
+- Click outside to close (mobile)
+
+ACCESSING LAYOUT FROM CONFIG:
+Config must be set via ConfigProvider or passed to DocLayout.
+DocLayout accesses config from configStore internally.
+
+================================================================================
+CONFIGPROVIDER COMPONENT
+================================================================================
+Provides configuration context to child components.
+
+IMPORT:
+import { ConfigProvider } from '@keenmate/svelte-docs';
+
+INTERFACE:
+interface Props {
+  config: DocsConfig;   // Configuration object
+  children: Snippet;    // Child components
+}
+
+USAGE:
+<script lang="ts">
+  import { ConfigProvider, DocLayout } from '@keenmate/svelte-docs';
+  import { docsConfig } from '$lib/docs-config';
+</script>
+
+<ConfigProvider config={docsConfig}>
+  <DocLayout>
+    <h1>Content</h1>
+  </DocLayout>
+</ConfigProvider>
+
+NOTES:
+- Usually not needed directly; DocLayout handles internally
+- Use when creating custom layouts
+- Config accessible via configStore in child components
+
+================================================================================
+SHOWCASESECTION COMPONENT
+================================================================================
+Multi-column section for displaying demos, controls, and descriptions.
+
+IMPORT:
+import { ShowcaseSection } from '@keenmate/svelte-docs';
+
+INTERFACE:
+interface Props {
+  titleText: string;                  // Section title
+  subtitleText?: string;              // Optional subtitle
+  idText?: string;                    // ID for anchor links
+  demoContent?: Snippet;              // Demo column content
+  controlsContent?: Snippet;          // Controls column content
+  descriptionContent?: Snippet;       // Description column content
+  col1Title?: string;                 // Column 1 title (default: "Demo")
+  col2Title?: string;                 // Column 2 title (default: "Controls")
+  col3Title?: string;                 // Column 3 title (default: "Description")
+  columnCountType?: 2 | 3;            // Number of columns (default: 3)
+  leftColumnSize?: number;            // Left column size (1-12)
+  rightColumnSize?: number;           // Right column size (1-12)
+  middleColumnSize?: number;          // Middle column size (1-12)
+}
+
+3-COLUMN LAYOUT (default):
+<ShowcaseSection titleText="Feature Demo">
+  {#snippet demoContent()}
+    <div class="demo">Live demo here</div>
+  {/snippet}
+
+  {#snippet controlsContent()}
+    <button>Click me</button>
+  {/snippet}
+
+  {#snippet descriptionContent()}
+    <p>Description of the feature</p>
+  {/snippet}
+</ShowcaseSection>
+
+2-COLUMN LAYOUT:
+<ShowcaseSection
+  titleText="Simple Demo"
+  columnCountType={2}
+>
+  {#snippet demoContent()}
+    <div class="demo">Demo</div>
+  {/snippet}
+
+  {#snippet controlsContent()}
+    <p>Description and controls combined</p>
+  {/snippet}
+</ShowcaseSection>
+
+CUSTOM COLUMN SIZES:
+<ShowcaseSection
+  titleText="Custom Layout"
+  columnCountType={3}
+  leftColumnSize={6}
+  middleColumnSize={3}
+  rightColumnSize={3}
+>
+  {#snippet demoContent()}
+    <div>Wide demo (6 columns)</div>
+  {/snippet}
+  {#snippet controlsContent()}
+    <div>Controls (3 columns)</div>
+  {/snippet}
+  {#snippet descriptionContent()}
+    <div>Desc (3 columns)</div>
+  {/snippet}
+</ShowcaseSection>
+
+CUSTOM COLUMN TITLES:
+<ShowcaseSection
+  titleText="API Example"
+  col1Title="Request"
+  col2Title="Response"
+  col3Title="Notes"
+>
+  <!-- content -->
+</ShowcaseSection>
+
+WITH ANCHOR LINKS:
+<ShowcaseSection
+  titleText="Feature Name"
+  idText="feature-name"
+>
+  <!-- Link to this: <a href="#feature-name">Jump to feature</a> -->
+</ShowcaseSection>
+
+COLUMN SIZE VALIDATION:
+- 3-column: left + middle + right must equal 12
+- 2-column: left + right must equal 12
+- Defaults: 3-col (4-4-4), 2-col (6-6)
+- Console warns if sizes don't sum to 12
+
+RESPONSIVE:
+- Columns stack on mobile (< lg breakpoint)
+- Full width on small screens
+- Side-by-side on large screens
+
+================================================================================
+CODEBLOCK COMPONENT
+================================================================================
+Single code block with syntax highlighting and copy button.
+
+IMPORT:
+import { CodeBlock } from '@keenmate/svelte-docs';
+
+INTERFACE:
+interface Props {
+  codeContent: string;      // Code to display
+  languageType?: string;    // Language for highlighting (default: 'text')
+  titleText?: string;       // Optional title
+  isCopyable?: boolean;     // Show copy button (default: true)
+}
+
+BASIC USAGE:
+<CodeBlock
+  codeContent={`function hello() {
+  console.log('Hello World');
+}`}
+  languageType="javascript"
+/>
+
+WITH TITLE:
+<CodeBlock
+  titleText="example.js"
+  codeContent="const x = 42;"
+  languageType="javascript"
+/>
+
+TYPESCRIPT:
+<CodeBlock
+  codeContent={`interface User {
+  name: string;
+  age: number;
+}`}
+  languageType="typescript"
+/>
+
+SVELTE:
+<CodeBlock
+  codeContent={`<script>
+  let count = $state(0);
+</script>
+
+<button onclick={() => count++}>
+  Count: {count}
+</button>`}
+  languageType="svelte"
+/>
+
+DISABLE COPY:
+<CodeBlock
+  codeContent="Read-only code"
+  isCopyable={false}
+/>
+
+SUPPORTED LANGUAGES:
+50+ languages via highlight.js:
+- javascript, typescript
+- html, css, scss
+- svelte, vue, react
+- python, java, c, cpp, csharp
+- go, rust, ruby, php
+- json, yaml, xml
+- sql, bash, shell
+- And many more...
+
+AUTO-DETECTION:
+If languageType not specified or not supported, highlight.js auto-detects.
+
+COPY BUTTON:
+- Copies raw code to clipboard
+- Shows "✓ Copied" feedback for 2 seconds
+- Positioned in top-right (with title) or floating (no title)
+
+================================================================================
+CODESHOWCASE COMPONENT
+================================================================================
+Tabbed code examples with multiple files/languages.
+
+IMPORT:
+import { CodeShowcase } from '@keenmate/svelte-docs';
+
+INTERFACE:
+interface Props {
+  titleText?: string;              // Showcase title (default: 'Code Example')
+  tabItems?: {                     // Array of tabs
+    labelText: string;
+    codeContent: string;
+    languageType?: string;
+  }[];
+  // OR use individual props:
+  svelteCodeContent?: string;      // Svelte tab
+  typescriptCodeContent?: string;  // TypeScript tab
+  cssCodeContent?: string;         // CSS tab
+}
+
+USING tabItems ARRAY:
+<CodeShowcase
+  titleText="Complete Example"
+  tabItems={[
+    {
+      labelText: 'Component',
+      codeContent: '<script>...</script>',
+      languageType: 'svelte'
+    },
+    {
+      labelText: 'Types',
+      codeContent: 'interface Props { ... }',
+      languageType: 'typescript'
+    },
+    {
+      labelText: 'Styles',
+      codeContent: '.my-class { ... }',
+      languageType: 'css'
+    }
+  ]}
+/>
+
+USING INDIVIDUAL PROPS:
+<CodeShowcase
+  svelteCodeContent={`<script>
+  let count = 0;
+</script>
+
+<button onclick={() => count++}>
+  {count}
+</button>`}
+
+  typescriptCodeContent={`interface ButtonProps {
+  label: string;
+  onClick: () => void;
+}`}
+
+  cssCodeContent={`.button {
+  background: blue;
+  color: white;
+}`}
+/>
+
+DYNAMIC TABS:
+<script>
+  let tabs = [
+    { labelText: 'Main', codeContent: 'code...', languageType: 'js' },
+    { labelText: 'Config', codeContent: '{}', languageType: 'json' }
+  ];
+</script>
+
+<CodeShowcase tabItems={tabs} />
+
+FEATURES:
+- Tab navigation with icons
+- Automatic language icons (🟠 Svelte, 🔷 TypeScript, etc.)
+- Copy button per tab
+- Syntax highlighting
+- Active tab persistence during session
+
+TAB ORDER:
+When using individual props: Svelte → TypeScript → CSS
+
+LANGUAGE ICONS:
+- Svelte: 🟠
+- TypeScript: 🔷
+- JavaScript: 🟨
+- CSS/SCSS: 🎨
+- HTML: 🟧
+- JSON: 📄
+- Other: 📝
+
+================================================================================
+FEATURECARD COMPONENT
+================================================================================
+Card component for displaying features, benefits, or information.
+
+IMPORT:
+import { FeatureCard } from '@keenmate/svelte-docs';
+
+INTERFACE:
+interface Props {
+  iconEmoji?: string;         // Icon emoji
+  titleText: string;          // Card title
+  descriptionText: string;    // Card description
+  linkHref?: string;          // Optional link
+  linkLabel?: string;         // Link text (default: 'Learn More')
+  variantType?: string;       // Button variant (default: 'outline-primary')
+  badgeText?: string;         // Optional badge
+  badgeVariantType?: string;  // Badge variant (default: 'secondary')
+  isDisabled?: boolean;       // Disabled state (default: false)
+}
+
+BASIC USAGE:
+<FeatureCard
+  iconEmoji="🚀"
+  titleText="Fast Performance"
+  descriptionText="Lightning-fast load times and smooth interactions"
+/>
+
+WITH LINK:
+<FeatureCard
+  iconEmoji="📚"
+  titleText="Documentation"
+  descriptionText="Comprehensive guides and examples"
+  linkHref="/docs"
+  linkLabel="Read Docs"
+/>
+
+WITH BADGE:
+<FeatureCard
+  iconEmoji="✨"
+  titleText="New Feature"
+  descriptionText="Recently added functionality"
+  badgeText="New"
+  badgeVariantType="success"
+/>
+
+DISABLED (COMING SOON):
+<FeatureCard
+  iconEmoji="🔮"
+  titleText="Future Feature"
+  descriptionText="This feature is under development"
+  linkHref="/future"
+  isDisabled={true}
+/>
+
+BUTTON VARIANTS:
+- primary, secondary, success, info, warning, danger
+- outline-primary, outline-secondary, outline-success, etc.
+- light, dark
+
+BADGE VARIANTS:
+- primary, secondary, success, info, warning, danger, light, dark
+
+LAYOUT:
+- Full height card (h-100)
+- Icon and title at top
+- Description fills space
+- Link button at bottom (if provided)
+- Flex layout ensures button stays at bottom
+
+================================================================================
+CARDGRID COMPONENT
+================================================================================
+Grid layout wrapper for organizing cards.
+
+IMPORT:
+import { CardGrid, FeatureCard } from '@keenmate/svelte-docs';
+
+INTERFACE:
+interface Props {
+  children: Snippet;    // Card components
+}
+
+USAGE:
+<CardGrid>
+  <div class="col-md-4">
+    <FeatureCard
+      iconEmoji="🎨"
+      titleText="Feature 1"
+      descriptionText="Description"
+    />
+  </div>
+
+  <div class="col-md-4">
+    <FeatureCard
+      iconEmoji="⚡"
+      titleText="Feature 2"
+      descriptionText="Description"
+    />
+  </div>
+
+  <div class="col-md-4">
+    <FeatureCard
+      iconEmoji="🔒"
+      titleText="Feature 3"
+      descriptionText="Description"
+    />
+  </div>
+</CardGrid>
+
+COLUMN SIZES:
+Use Bootstrap column classes inside CardGrid:
+
+3 COLUMNS (Desktop):
+<CardGrid>
+  <div class="col-md-4"><FeatureCard ... /></div>
+  <div class="col-md-4"><FeatureCard ... /></div>
+  <div class="col-md-4"><FeatureCard ... /></div>
+</CardGrid>
+
+2 COLUMNS (Desktop):
+<CardGrid>
+  <div class="col-md-6"><FeatureCard ... /></div>
+  <div class="col-md-6"><FeatureCard ... /></div>
+</CardGrid>
+
+4 COLUMNS (Desktop):
+<CardGrid>
+  <div class="col-md-3"><FeatureCard ... /></div>
+  <div class="col-md-3"><FeatureCard ... /></div>
+  <div class="col-md-3"><FeatureCard ... /></div>
+  <div class="col-md-3"><FeatureCard ... /></div>
+</CardGrid>
+
+RESPONSIVE:
+Automatically stacks on mobile, side-by-side on desktop.
+
+FEATURES:
+- Bootstrap grid system (row with g-4 gutter)
+- Responsive by default
+- Even spacing between cards
+- Works with any card component
+
+================================================================================
+CARD COMPONENT
+================================================================================
+Simple card component for custom content.
+
+IMPORT:
+import { Card } from '@keenmate/svelte-docs';
+
+INTERFACE:
+interface Props {
+  titleText?: string;         // Card title
+  subtitleText?: string;      // Card subtitle
+  children: Snippet;          // Card content
+  footerContent?: Snippet;    // Optional footer
+}
+
+BASIC USAGE:
+<Card titleText="My Card">
+  <p>Card content goes here</p>
+</Card>
+
+WITH SUBTITLE:
+<Card
+  titleText="Main Title"
+  subtitleText="Supporting text"
+>
+  <p>Content</p>
+</Card>
+
+WITH FOOTER:
+<Card titleText="Card with Footer">
+  {#snippet children()}
+    <p>Main content</p>
+  {/snippet}
+
+  {#snippet footerContent()}
+    <button class="btn btn-primary">Action</button>
+  {/snippet}
+</Card>
+
+NO TITLE:
+<Card>
+  <div class="custom-content">
+    <h3>Custom</h3>
+    <p>Fully custom content</p>
+  </div>
+</Card>
+
+STYLING:
+Uses Bootstrap card classes, can be styled with theme config.
+
+================================================================================
+MERMAIDCHART COMPONENT
+================================================================================
+Renders Mermaid diagrams from markdown syntax.
+
+IMPORT:
+import { MermaidChart } from '@keenmate/svelte-docs';
+
+INTERFACE:
+interface Props {
+  chartDefinition: string;    // Mermaid diagram syntax
+  titleText?: string;         // Optional title
+}
+
+FLOWCHART:
+<MermaidChart
+  titleText="Process Flow"
+  chartDefinition={`flowchart TD
+    Start --> Process
+    Process --> Decision{Is it valid?}
+    Decision -->|Yes| Success
+    Decision -->|No| Error
+    Success --> End
+    Error --> End`}
+/>
+
+SEQUENCE DIAGRAM:
+<MermaidChart
+  chartDefinition={`sequenceDiagram
+    Alice->>John: Hello John
+    John-->>Alice: Hi Alice
+    Alice->>John: How are you?
+    John-->>Alice: Great!`}
+/>
+
+CLASS DIAGRAM:
+<MermaidChart
+  chartDefinition={`classDiagram
+    class Animal {
+      +String name
+      +int age
+      +makeSound()
+    }
+    class Dog {
+      +bark()
+    }
+    Animal <|-- Dog`}
+/>
+
+GANTT CHART:
+<MermaidChart
+  chartDefinition={`gantt
+    title Project Schedule
+    dateFormat YYYY-MM-DD
+    section Phase 1
+    Task 1: 2025-01-01, 30d
+    Task 2: 2025-02-01, 20d`}
+/>
+
+PIE CHART:
+<MermaidChart
+  chartDefinition={`pie title Survey Results
+    "Strongly Agree" : 45
+    "Agree" : 30
+    "Neutral" : 15
+    "Disagree" : 10`}
+/>
+
+FEATURES:
+- Client-side rendering
+- Automatic theming
+- Responsive sizing
+- All Mermaid diagram types supported
+
+SUPPORTED DIAGRAMS:
+- Flowchart
+- Sequence Diagram
+- Class Diagram
+- State Diagram
+- Entity Relationship Diagram
+- User Journey
+- Gantt Chart
+- Pie Chart
+- Git Graph
+- And more...
+
+================================================================================
+COMPONENT PATTERNS
+================================================================================
+
+SVELTE 5 RUNES:
+All components use Svelte 5 patterns.
+
+$state:
+let count = $state(0);
+let items = $state<string[]>([]);
+
+$derived.by (ALWAYS use this for functions):
+let doubled = $derived.by(() => {
+  return count * 2;
+});
+
+Access directly in templates:
+<p>{doubled}</p>  <!-- NOT {doubled()} -->
+
+$effect:
+$effect(() => {
+  console.log('Count changed:', count);
+});
+
+SNIPPETS:
+Children content via snippets:
+
+<ShowcaseSection titleText="Demo">
+  {#snippet demoContent()}
+    <div>Demo</div>
+  {/snippet}
+</ShowcaseSection>
+
+NAMING CONVENTION:
+All props follow strict naming:
+- Boolean: isVisible, hasChildren, canEdit
+- Text: titleText, descriptionText, labelText
+- Type: variantType, colorType, sizeType
+- Collections: navItems, tabItems, buttonList
+- URLs: linkHref, websiteUrl, imageUrl
+
+TYPESCRIPT:
+All components are fully typed.
+
+import type { DocsConfig, NavigationItem } from '@keenmate/svelte-docs';
+
+RESPONSIVE DESIGN:
+All components responsive by default using Bootstrap breakpoints:
+- xs: < 576px (mobile)
+- sm: ≥ 576px
+- md: ≥ 768px (tablet)
+- lg: ≥ 992px (desktop)
+- xl: ≥ 1200px
+- xxl: ≥ 1400px
+
+================================================================================
+COMMON PATTERNS
+================================================================================
+
+DOCUMENTATION PAGE:
+<script lang="ts">
+  import { DocLayout, ShowcaseSection, CodeBlock, CardGrid, FeatureCard } from '@keenmate/svelte-docs';
+</script>
+
+<DocLayout titleText="API Reference">
+  <h1>API Reference</h1>
+
+  <ShowcaseSection titleText="Authentication">
+    {#snippet demoContent()}
+      <CodeBlock
+        codeContent="const token = await auth.getToken();"
+        languageType="javascript"
+      />
+    {/snippet}
+
+    {#snippet descriptionContent()}
+      <p>Authenticate with your API key</p>
+    {/snippet}
+  </ShowcaseSection>
+
+  <h2>Features</h2>
+  <CardGrid>
+    <div class="col-md-4">
+      <FeatureCard
+        iconEmoji="🔐"
+        titleText="Secure"
+        descriptionText="Enterprise-grade security"
+      />
+    </div>
+  </CardGrid>
+</DocLayout>
+
+COMPONENT SHOWCASE PAGE:
+<ShowcaseSection
+  titleText="Button Component"
+  idText="button-component"
+>
+  {#snippet demoContent()}
+    <button class="btn btn-primary">Click Me</button>
+  {/snippet}
+
+  {#snippet controlsContent()}
+    <CodeShowcase
+      svelteCodeContent={`<button class="btn btn-primary">
+  Click Me
+</button>`}
+    />
+  {/snippet}
+
+  {#snippet descriptionContent()}
+    <p>A simple button component</p>
+  {/snippet}
+</ShowcaseSection>
+
+LANDING PAGE (No Sidebar):
+<DocLayout isNavigationVisible={false}>
+  <div class="text-center py-5">
+    <h1 class="display-1">Welcome</h1>
+    <p class="lead">Beautiful documentation framework</p>
+
+    <CardGrid>
+      <div class="col-md-4">
+        <FeatureCard
+          iconEmoji="⚡"
+          titleText="Fast"
+          descriptionText="Lightning fast"
+          linkHref="/docs"
+        />
+      </div>
+      <!-- more cards -->
+    </CardGrid>
+  </div>
+</DocLayout>
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Component not rendering:
+→ Check import path: '@keenmate/svelte-docs'
+→ Verify Svelte 5 syntax
+→ Check browser console for errors
+
+Types not working:
+→ Import types: import type { ... } from '@keenmate/svelte-docs';
+→ Verify TypeScript is configured
+
+Styles not applying:
+→ Import CSS in layout: import '@keenmate/svelte-docs/styles/main.css';
+→ Check Bootstrap classes are correct
+
+Layout broken:
+→ Verify config is provided
+→ Check navigation structure
+→ Ensure Bootstrap grid rules (columns sum to 12)
+
+Code highlighting not working:
+→ Verify languageType is correct
+→ Check highlight.js supports the language
+→ Try auto-detection (omit languageType)
+
+Snippets not working:
+→ Use Svelte 5 syntax: {#snippet name()}...{/snippet}
+→ Render with {@render snippet()}
+
+Props not reactive:
+→ Use $state for reactive variables
+→ Use $derived.by for computed values
+→ Check prop binding syntax
+
+================================================================================
+BEST PRACTICES
+================================================================================
+
+1. Component Organization:
+   - One component per feature/section
+   - Group related showcases together
+   - Use semantic HTML inside components
+
+2. Code Examples:
+   - Always specify languageType for CodeBlock
+   - Use CodeShowcase for multi-file examples
+   - Keep code examples concise and focused
+
+3. Layout:
+   - Use DocLayout for all pages
+   - Disable sidebar only for landing pages
+   - Use ShowcaseSection for consistent structure
+
+4. Cards:
+   - Use FeatureCard for features/benefits
+   - Always wrap in CardGrid for proper spacing
+   - Use Bootstrap columns for responsive layout
+
+5. Navigation:
+   - Keep menu depth ≤ 2 levels
+   - Use icons for visual hierarchy
+   - Add badges for new features
+
+6. Performance:
+   - Lazy load heavy components
+   - Keep code examples reasonable size
+   - Optimize images before using
+
+7. Accessibility:
+   - Provide alt text for images
+   - Use semantic headings (h1, h2, h3)
+   - Ensure keyboard navigation works
+
+8. Responsive:
+   - Test on mobile devices
+   - Use Bootstrap breakpoints
+   - Stack columns on small screens
+
+================================================================================
+RESOURCES
+================================================================================
+
+Component source code: ../src/lib/components/
+Type definitions: ../src/lib/types/config.ts
+Example usage: ../src/routes/
+Bootstrap docs: https://getbootstrap.com/docs/5.3/
+Highlight.js languages: https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md
+Mermaid docs: https://mermaid.js.org/

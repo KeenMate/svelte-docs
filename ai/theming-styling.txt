@@ -1,0 +1,828 @@
+THEMING & STYLING GUIDE
+=======================
+
+STYLING PHILOSOPHY
+------------------
+svelte-docs is a RESTRICTIVE framework:
+- NO custom CSS files allowed in user projects
+- ALL styling is encapsulated in library components
+- Bootstrap 5.3 CSS framework (not JS)
+- Customization via SCSS variables or config only
+- Professional, consistent appearance enforced
+
+CUSTOMIZATION OPTIONS:
+1. DocsConfig theme object (runtime, CSS variables)
+2. SCSS variables (compile-time, for library development)
+3. Bootstrap utility classes (limited use)
+
+NOT ALLOWED:
+- Custom CSS files
+- Arbitrary styling outside theme config
+- Modifying component internals
+- Inline styles (except via theme config)
+
+================================================================================
+CSS ARCHITECTURE
+================================================================================
+
+MAIN STYLES:
+src/lib/styles/main.scss - Main stylesheet
+src/lib/styles/_variables.scss - SCSS variables
+
+IMPORT IN YOUR PROJECT:
+import '@keenmate/svelte-docs/styles/main.css';
+
+BUILT ON:
+- Bootstrap 5.3 CSS (grid, utilities, components)
+- Custom SCSS overrides
+- CSS custom properties (runtime theming)
+- Highlight.js (code syntax highlighting)
+
+COMPILATION:
+npm run build:css
+→ Compiles SCSS to dist/styles/main.css
+→ Uses sass command directly
+→ Modern @use syntax (not @import)
+
+================================================================================
+RUNTIME THEMING (CSS VARIABLES)
+================================================================================
+
+Configure via DocsConfig theme object.
+
+THEME CONFIG STRUCTURE:
+{
+  theme: {
+    colors: {
+      primary: string;
+      primaryDark: string;
+      secondary: string;
+      dark: string;
+      light: string;
+      success: string;
+      warning: string;
+      danger: string;
+      info: string;
+    },
+    fonts: {
+      body: string;
+      heading: string;
+      mono: string;
+    },
+    components: {
+      navbar: {
+        height: string;
+        background: string;
+      },
+      sidebar: {
+        width: string;
+        background: string;
+      },
+      footer: {
+        background: string;
+        height: string;
+      }
+    }
+  }
+}
+
+GENERATED CSS VARIABLES:
+Config generates --docs-* CSS custom properties.
+
+EXAMPLE:
+{
+  theme: {
+    colors: {
+      primary: '#6366f1'
+    }
+  }
+}
+
+Generates:
+:root {
+  --docs-primary: #6366f1;
+  --docs-primary-rgb: 99, 102, 241;
+}
+
+AVAILABLE CSS VARIABLES:
+Colors:
+--docs-primary
+--docs-primary-dark
+--docs-secondary
+--docs-dark
+--docs-light
+--docs-success
+--docs-warning
+--docs-danger
+--docs-info
+--docs-{color}-rgb (for rgba usage)
+
+Fonts:
+--docs-font-body
+--docs-font-heading
+--docs-font-mono
+
+Components:
+--navbar-height
+--sidebar-width
+--footer-height
+
+CUSTOM BRAND COLORS:
+{
+  theme: {
+    colors: {
+      primary: '#00A7E1',        // Keenmate blue
+      primaryDark: '#007EA7',
+      secondary: '#003459',
+      dark: '#00171F',
+      success: '#198754',
+      warning: '#ffc107',
+      danger: '#dc3545'
+    }
+  }
+}
+
+CUSTOM FONTS:
+{
+  theme: {
+    fonts: {
+      body: 'Inter, system-ui, sans-serif',
+      heading: 'Inter, system-ui, sans-serif',
+      mono: '"Fira Code", "Cascadia Code", monospace'
+    }
+  }
+}
+
+Include @font-face in your app's CSS if using custom fonts.
+
+COMPONENT SIZING:
+{
+  theme: {
+    components: {
+      navbar: {
+        height: '64px'           // Taller navbar
+      },
+      sidebar: {
+        width: '320px'           // Wider sidebar
+      },
+      footer: {
+        height: '80px'           // Taller footer
+      }
+    }
+  }
+}
+
+================================================================================
+SSR STYLES (FOUC PREVENTION)
+================================================================================
+
+WHAT IS FOUC?
+Flash of Unstyled Content - page appears briefly without styles.
+
+SOLUTION:
+Inline critical CSS in HTML head before main CSS loads.
+
+SETUP:
+src/routes/+layout.server.ts:
+import type { LayoutServerLoad } from './$types';
+import { generateSSRStyles } from '@keenmate/svelte-docs/utils';
+import { docsConfig } from '$lib/docs-config';
+
+export const load: LayoutServerLoad = async () => {
+  const inlineStyles = generateSSRStyles(docsConfig);
+
+  return {
+    config: docsConfig,
+    inlineStyles
+  };
+};
+
+src/routes/+layout.svelte:
+<script lang="ts">
+  import '@keenmate/svelte-docs/styles/main.css';
+  import type { LayoutData } from './$types';
+
+  export let data: LayoutData;
+</script>
+
+<svelte:head>
+  {@html `<style>${data.inlineStyles}</style>`}
+</svelte:head>
+
+<slot />
+
+WHAT IT DOES:
+- Generates critical CSS from theme config
+- Injects CSS variables into HTML head
+- Applies body styles (margin, padding, font)
+- Sets navbar height before layout shift
+- Prevents visual flash on page load
+
+GENERATED STYLES:
+:root {
+  --docs-primary: #00A7E1;
+  --docs-secondary: #003459;
+  --navbar-height: 56px;
+  --sidebar-width: 280px;
+  /* ... */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  padding-top: var(--navbar-height, 56px);
+  font-family: var(--docs-font-body);
+  background-color: #fafafa;
+}
+
+BENEFITS:
+- No FOUC on initial page load
+- Faster perceived performance
+- Better SEO (styles present on SSR)
+- Consistent layout before JS loads
+
+================================================================================
+SCSS VARIABLES (LIBRARY DEVELOPMENT)
+================================================================================
+
+For customizing the library itself (not for end users).
+
+LOCATION:
+src/lib/styles/_variables.scss
+
+COMPILE-TIME CUSTOMIZATION:
+Override SCSS variables before importing main.scss.
+
+COLOR VARIABLES:
+$color-primary: #00A7E1 !default;
+$color-primary-dark: #007EA7 !default;
+$color-secondary: #003459 !default;
+$color-dark: #00171F !default;
+$color-light: #FFFFFF !default;
+
+Bootstrap-like:
+$primary-color: $color-primary !default;
+$secondary-color: $color-secondary !default;
+$dark-color: $color-dark !default;
+$light-color: #f8f9fa !default;
+
+COMPONENT VARIABLES:
+$navbar-height: 56px !default;
+$sidebar-width: 280px !default;
+$footer-height: 60px !default;
+
+TYPOGRAPHY:
+$font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !default;
+$font-family-monospace: 'Courier New', Monaco, 'Cascadia Code', monospace !default;
+
+TYPOGRAPHY SPACING:
+$h1-margin-top: 0 !default;
+$h1-margin-bottom: 1rem !default;
+$h2-margin-top: 1.25rem !default;
+$h2-margin-bottom: 0.75rem !default;
+$h3-margin-top: 1rem !default;
+$h3-margin-bottom: 0.5rem !default;
+
+Content:
+$paragraph-margin-bottom: 1rem !default;
+$list-margin-bottom: 1rem !default;
+$list-padding-left: 1.5rem !default;
+$blockquote-padding-left: 1rem !default;
+
+TYPOGRAPHY COLORS:
+$heading-color-h1: #2563eb !default;
+$heading-color-h2: #1e40af !default;
+$heading-color-h3: #3730a3 !default;
+$link-color: #2563eb !default;
+$text-muted-color: #64748b !default;
+
+CODE STYLING:
+$code-bg-color: #f1f5f9 !default;
+$code-padding: 0.2rem 0.4rem !default;
+$code-border-radius: 0.25rem !default;
+$pre-bg-color: #1e293b !default;
+$pre-text-color: #e2e8f0 !default;
+
+Code blocks:
+$code-header-bg: #334155 !default;
+$code-button-color: #94a3b8 !default;
+$code-inline-color: #e83e8c !default;
+
+SYNTAX HIGHLIGHTING (Material Theme):
+$syntax-keyword-color: #c792ea !default;
+$syntax-string-color: #c3e88d !default;
+$syntax-comment-color: #546e7a !default;
+$syntax-number-color: #f78c6c !default;
+$syntax-function-color: #82aaff !default;
+$syntax-variable-color: #f07178 !default;
+$syntax-tag-color: #f07178 !default;
+
+BORDERS & BACKGROUNDS:
+$border-color-light: #e2e8f0 !default;
+$background-color-light: #f8fafc !default;
+$table-header-bg: #f8fafc !default;
+$body-bg-color: #fafafa !default;
+
+HOW TO OVERRIDE (Library development):
+Create custom-variables.scss:
+$color-primary: #ff0000;
+$navbar-height: 80px;
+
+@use 'svelte-docs/styles/main' with (
+  $color-primary: #ff0000,
+  $navbar-height: 80px
+);
+
+================================================================================
+BOOTSTRAP INTEGRATION
+================================================================================
+
+WHAT'S INCLUDED:
+Bootstrap 5.3 CSS (not JavaScript):
+- Grid system (container, row, col-*)
+- Utility classes (spacing, display, flex)
+- Typography utilities
+- Color utilities
+- Component classes (card, nav, navbar, etc.)
+
+NO BOOTSTRAP JS:
+Only CSS framework used. No Bootstrap JavaScript bundle.
+
+USING BOOTSTRAP UTILITIES:
+Allowed in component content:
+
+Spacing:
+<div class="mb-3">Margin bottom</div>
+<div class="p-4">Padding all sides</div>
+<div class="mt-2 mb-4">Margin top & bottom</div>
+
+Display:
+<div class="d-flex">Flexbox</div>
+<div class="d-none d-md-block">Hide mobile, show desktop</div>
+
+Grid:
+<div class="row">
+  <div class="col-md-6">Half width desktop</div>
+  <div class="col-md-6">Half width desktop</div>
+</div>
+
+Text:
+<p class="text-center">Centered text</p>
+<p class="text-muted">Muted text</p>
+<strong class="text-primary">Primary color</strong>
+
+Buttons:
+<button class="btn btn-primary">Primary</button>
+<button class="btn btn-outline-secondary">Outline</button>
+
+BOOTSTRAP CUSTOMIZATION:
+Library overrides Bootstrap variables in SCSS:
+- Uses custom color palette
+- Adjusted spacing scale
+- Custom component styles
+- Modified navbar/sidebar
+
+================================================================================
+CODE SYNTAX HIGHLIGHTING
+================================================================================
+
+POWERED BY:
+Highlight.js with 50+ language support.
+
+LANGUAGES SUPPORTED:
+- javascript, typescript
+- html, css, scss, sass
+- svelte, vue, react, jsx, tsx
+- python, java, c, cpp, csharp, go, rust
+- json, yaml, xml
+- sql, bash, shell, powershell
+- markdown, diff
+- And many more...
+
+THEMES:
+Custom Material-inspired theme with:
+- Keywords: Purple (#c792ea)
+- Strings: Green (#c3e88d)
+- Comments: Gray (#546e7a)
+- Numbers: Orange (#f78c6c)
+- Functions: Blue (#82aaff)
+- Variables: Red (#f07178)
+
+CUSTOMIZING SYNTAX COLORS:
+Override in SCSS:
+$syntax-keyword-color: #yourcolor;
+$syntax-string-color: #yourcolor;
+
+Or use CSS variables (if exposed):
+:root {
+  --syntax-keyword: #yourcolor;
+}
+
+CODE BLOCK STYLING:
+Dark background: $pre-bg-color: #1e293b
+Light text: $pre-text-color: #e2e8f0
+Rounded corners: $pre-border-radius: 0.5rem
+Header bar: $code-header-bg: #334155
+Copy button: $code-button-color: #94a3b8
+
+INLINE CODE:
+Background: $code-bg-color: #f1f5f9
+Color: $code-inline-color: #e83e8c
+Padding: $code-padding: 0.2rem 0.4rem
+
+================================================================================
+RESPONSIVE DESIGN
+================================================================================
+
+BREAKPOINTS (Bootstrap):
+- xs: < 576px (mobile portrait)
+- sm: ≥ 576px (mobile landscape)
+- md: ≥ 768px (tablet)
+- lg: ≥ 992px (desktop)
+- xl: ≥ 1200px (large desktop)
+- xxl: ≥ 1400px (extra large)
+
+RESPONSIVE BEHAVIOR:
+Sidebar:
+- Desktop (≥ lg): Visible by default, side-by-side
+- Mobile (< lg): Hidden by default, overlay when opened
+
+Columns:
+- Desktop: Multi-column layouts
+- Mobile: Single column, stacked
+
+Navigation:
+- Desktop: Full menu visible
+- Mobile: Burger menu icon
+
+Typography:
+- Responsive font sizes
+- Adjusted spacing on mobile
+
+RESPONSIVE UTILITIES:
+<div class="d-none d-lg-block">Desktop only</div>
+<div class="d-lg-none">Mobile only</div>
+<div class="col-12 col-md-6">Full on mobile, half on tablet+</div>
+
+================================================================================
+COMPONENT-SPECIFIC STYLING
+================================================================================
+
+NAVBAR:
+- Fixed to top
+- Dark background (--docs-dark or --docs-secondary)
+- Height: var(--navbar-height, 56px)
+- Burger menu on mobile
+- Company logo and site title
+- Social links (GitHub, etc.)
+
+Customization:
+{
+  theme: {
+    components: {
+      navbar: {
+        height: '64px',
+        background: '#003459'
+      }
+    }
+  }
+}
+
+SIDEBAR:
+- Fixed height (full viewport minus navbar)
+- Width: var(--sidebar-width, 280px)
+- Dark background
+- Nested navigation with expand/collapse
+- Active link highlighting
+- Tooltips on hover
+- Persistent state (localStorage)
+
+Customization:
+{
+  theme: {
+    components: {
+      sidebar: {
+        width: '320px',
+        background: '#003459'
+      }
+    }
+  }
+}
+
+FOOTER:
+- Fixed height: var(--footer-height, 60px)
+- Dark background
+- Centered content
+- Company info
+- Social links
+
+Customization:
+{
+  theme: {
+    components: {
+      footer: {
+        height: '80px',
+        background: '#003459'
+      }
+    }
+  }
+}
+
+CODE BLOCKS:
+- Dark background (#1e293b)
+- Light text (#e2e8f0)
+- Header bar with title
+- Copy button (top-right)
+- Syntax highlighting
+- Scrollable overflow
+
+CARDS:
+- White background
+- Border
+- Shadow on hover
+- Padding
+- Full height option (h-100)
+
+SHOWCASESECTION:
+- Multi-column grid
+- Colored headings (primary, success, info)
+- Responsive stacking
+- Even column spacing
+
+================================================================================
+DARK MODE
+================================================================================
+
+CURRENT STATUS:
+Dark mode toggle available in features config, but not fully implemented.
+
+{
+  features: {
+    darkMode: true
+  }
+}
+
+FUTURE IMPLEMENTATION:
+Will add:
+- Dark color scheme
+- Toggle button in navbar
+- localStorage persistence
+- Smooth transitions
+- Dark syntax highlighting theme
+
+================================================================================
+ADVANCED CUSTOMIZATION
+================================================================================
+
+CUSTOM SCSS (Library development):
+Create custom build:
+
+1. Clone svelte-docs repository
+2. Edit src/lib/styles/_variables.scss
+3. Run npm run build:css
+4. Use generated dist/styles/main.css
+
+EXTENDING STYLES:
+Not officially supported for end users.
+All styling must be within library boundaries.
+
+WORKAROUNDS (Not recommended):
+- Global styles in app.css (may conflict)
+- Inline styles (breaks consistency)
+- !important overrides (fragile)
+
+BEST PRACTICE:
+Request features via GitHub issues if you need customization options.
+
+================================================================================
+ACCESSIBILITY
+================================================================================
+
+BUILT-IN FEATURES:
+- Semantic HTML structure
+- ARIA labels on interactive elements
+- Keyboard navigation support
+- Focus indicators
+- Color contrast compliance
+- Screen reader friendly
+- Skip links (to be added)
+
+HEADING HIERARCHY:
+Proper heading structure:
+<h1> - Page title (one per page)
+<h2> - Major sections
+<h3> - Subsections
+<h4>, <h5>, <h6> - Nested sections
+
+Don't skip levels (e.g., h1 → h3).
+
+FOCUS STYLES:
+Visible focus indicators on:
+- Links
+- Buttons
+- Form controls
+- Navigation items
+
+COLOR CONTRAST:
+Text meets WCAG AA standards:
+- Minimum 4.5:1 for normal text
+- Minimum 3:1 for large text
+
+TEST ACCESSIBILITY:
+- Use axe DevTools browser extension
+- Test with keyboard only
+- Test with screen reader
+- Check color contrast
+
+================================================================================
+PERFORMANCE OPTIMIZATION
+================================================================================
+
+CSS OPTIMIZATION:
+- Minified in production
+- Unused Bootstrap CSS eliminated
+- Critical CSS inlined (SSR)
+- Single CSS file (no split)
+
+HIGHLIGHT.JS:
+- Tree-shakeable imports
+- Only load needed languages
+- Lazy highlight on demand
+
+FONT LOADING:
+Use system fonts for best performance:
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
+
+Or optimize custom fonts:
+- Use font-display: swap
+- Subset fonts (Latin only if possible)
+- Serve woff2 format
+- Preload critical fonts
+
+IMAGE OPTIMIZATION:
+- Optimize before using
+- Use modern formats (WebP, AVIF)
+- Provide width/height attributes
+- Lazy load below-fold images
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Styles not loading:
+→ Verify CSS import: import '@keenmate/svelte-docs/styles/main.css';
+→ Check file path is correct
+→ Clear cache and rebuild
+
+Theme colors not applying:
+→ Check theme config structure
+→ Verify CSS variables are set (:root in DevTools)
+→ Ensure SSR styles are generated
+
+FOUC (Flash):
+→ Implement SSR styles (see SSR section)
+→ Inline critical CSS in HTML head
+→ Check generateSSRStyles is called
+
+Code highlighting broken:
+→ Verify highlight.js is loaded
+→ Check language name is correct
+→ Try auto-detection (omit languageType)
+
+Layout broken:
+→ Check Bootstrap grid rules
+→ Verify columns sum to 12
+→ Test responsive breakpoints
+
+Responsive issues:
+→ Test on actual devices
+→ Use browser DevTools responsive mode
+→ Check Bootstrap breakpoints are working
+
+Typography issues:
+→ Verify font imports (if custom)
+→ Check font fallbacks are specified
+→ Test on multiple browsers/devices
+
+Conflicting styles:
+→ Avoid global CSS in your app
+→ Don't use !important
+→ Keep customization within theme config
+
+================================================================================
+BEST PRACTICES
+================================================================================
+
+1. Theme Configuration:
+   - Use DocsConfig theme object for all customization
+   - Don't create custom CSS files
+   - Keep colors within brand palette
+   - Test theme on light and dark backgrounds
+
+2. Typography:
+   - Use system fonts for performance
+   - Maintain heading hierarchy
+   - Keep line length readable (60-80 chars)
+   - Ensure sufficient contrast
+
+3. Colors:
+   - Stick to theme config colors
+   - Test color contrast
+   - Use semantic colors (success, danger, etc.)
+   - Consider colorblind users
+
+4. Responsive:
+   - Mobile-first mindset
+   - Test on real devices
+   - Use Bootstrap breakpoints
+   - Avoid fixed pixel widths
+
+5. Accessibility:
+   - Proper heading structure
+   - Alt text for images
+   - Keyboard navigation
+   - ARIA labels where needed
+
+6. Performance:
+   - Implement SSR styles
+   - Optimize images
+   - Use system fonts
+   - Lazy load heavy components
+
+7. Consistency:
+   - Use provided components
+   - Follow Bootstrap conventions
+   - Maintain visual hierarchy
+   - Keep design cohesive
+
+8. Testing:
+   - Test all breakpoints
+   - Check accessibility
+   - Validate color contrast
+   - Test with slow connections
+
+================================================================================
+EXAMPLES
+================================================================================
+
+CUSTOM BRAND THEME:
+{
+  theme: {
+    colors: {
+      primary: '#6366f1',        // Indigo
+      primaryDark: '#4f46e5',
+      secondary: '#1e293b',      // Slate
+      success: '#10b981',        // Emerald
+      danger: '#ef4444',         // Red
+      info: '#06b6d4'           // Cyan
+    },
+    fonts: {
+      body: 'Inter, system-ui, sans-serif',
+      heading: 'Inter, system-ui, sans-serif',
+      mono: '"Fira Code", monospace'
+    },
+    components: {
+      navbar: {
+        height: '64px'
+      },
+      sidebar: {
+        width: '320px'
+      }
+    }
+  }
+}
+
+MINIMAL THEME:
+{
+  theme: {
+    colors: {
+      primary: '#000000',
+      secondary: '#666666'
+    }
+  }
+}
+
+COLORFUL THEME:
+{
+  theme: {
+    colors: {
+      primary: '#ff6b6b',
+      secondary: '#4ecdc4',
+      success: '#95e1d3',
+      warning: '#ffe66d',
+      danger: '#ff6b6b',
+      info: '#a8dadc'
+    }
+  }
+}
+
+================================================================================
+RESOURCES
+================================================================================
+
+Library styles: ../src/lib/styles/main.scss
+SCSS variables: ../src/lib/styles/_variables.scss
+SSR utilities: ../src/lib/utils/ssr-styles.ts
+Bootstrap docs: https://getbootstrap.com/docs/5.3/
+Highlight.js: https://highlightjs.org/
+CSS Variables: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties

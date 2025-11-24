@@ -1,0 +1,569 @@
+GETTING STARTED WITH SVELTE-DOCS
+=================================
+
+WHAT IS SVELTE-DOCS?
+--------------------
+A highly opinionated documentation framework for SvelteKit projects.
+Built with Svelte 5, TypeScript, and Bootstrap 5.3.
+
+KEY PHILOSOPHY:
+- Restrictive framework (NOT a flexible UI kit)
+- Configuration over customization
+- No custom CSS or HTML allowed
+- All styling encapsulated in components
+- Professional, consistent appearance
+
+INSTALLATION
+------------
+npm install @keenmate/svelte-docs
+
+PEER DEPENDENCIES:
+- @sveltejs/kit: ^2.0.0
+- svelte: ^4.0.0 || ^5.0.0
+
+These must be installed in your project.
+
+BASIC SETUP
+-----------
+1. Create a SvelteKit project (if new):
+   npm create svelte@latest my-docs
+   cd my-docs
+   npm install
+
+2. Install svelte-docs:
+   npm install @keenmate/svelte-docs
+
+3. Import styles in your root layout (+layout.svelte):
+   import '@keenmate/svelte-docs/styles/main.css';
+
+4. Create your configuration file (src/lib/docs-config.ts):
+   import type { DocsConfig } from '@keenmate/svelte-docs';
+
+   export const docsConfig: DocsConfig = {
+     site: {
+       title: 'My Documentation',
+       description: 'My awesome documentation site'
+     },
+     company: {
+       name: 'My Company'
+     },
+     navigation: {
+       main: [
+         { label: 'Home', href: '/' },
+         { label: 'Docs', href: '/docs' }
+       ]
+     }
+   };
+
+5. Use DocLayout in your pages:
+   <script lang="ts">
+     import { DocLayout } from '@keenmate/svelte-docs';
+     import { docsConfig } from '$lib/docs-config';
+   </script>
+
+   <DocLayout config={docsConfig}>
+     <h1>Welcome to my documentation!</h1>
+   </DocLayout>
+
+MINIMAL WORKING EXAMPLE
+-----------------------
+src/routes/+layout.svelte:
+<script lang="ts">
+  import '@keenmate/svelte-docs/styles/main.css';
+</script>
+
+<slot />
+
+src/lib/docs-config.ts:
+import type { DocsConfig } from '@keenmate/svelte-docs';
+
+export const docsConfig: DocsConfig = {
+  site: {
+    title: 'My Docs'
+  },
+  company: {
+    name: 'My Company'
+  },
+  navigation: {
+    main: [
+      { label: 'Home', href: '/' }
+    ]
+  }
+};
+
+src/routes/+page.svelte:
+<script lang="ts">
+  import { DocLayout } from '@keenmate/svelte-docs';
+  import { docsConfig } from '$lib/docs-config';
+</script>
+
+<DocLayout config={docsConfig}>
+  <h1>Hello World</h1>
+</DocLayout>
+
+CORE DEVELOPMENT COMMANDS
+--------------------------
+Development:
+  npm run dev              # Start development server
+  npm run build            # Build static site
+  npm run preview          # Preview production build
+
+Quality Assurance:
+  npm run check            # TypeScript validation
+  npm run check:watch      # TypeScript validation in watch mode
+
+Styling (for library development):
+  npm run build:css        # Compile SCSS to CSS
+
+Publishing (for library development):
+  npm run package          # Build library for NPM
+  npm run prepublishOnly   # Runs before npm publish
+  make publish-dry         # Dry run publish
+  make publish             # Publish to NPM
+
+PROJECT STRUCTURE
+-----------------
+When using svelte-docs in your project:
+
+my-docs/
+├── src/
+│   ├── lib/
+│   │   └── docs-config.ts          # Your configuration
+│   └── routes/
+│       ├── +layout.svelte          # Import styles here
+│       ├── +page.svelte            # Home page
+│       └── docs/
+│           └── +page.svelte        # Documentation pages
+├── package.json
+└── svelte.config.js
+
+LIBRARY SOURCE STRUCTURE:
+(For reference when contributing)
+
+svelte-docs/
+├── src/
+│   ├── lib/
+│   │   ├── components/             # Svelte 5 components
+│   │   ├── types/
+│   │   │   └── config.ts           # TypeScript interfaces
+│   │   ├── stores/
+│   │   │   └── config.svelte.ts    # Svelte 5 stores
+│   │   ├── styles/
+│   │   │   ├── main.scss           # Main styles
+│   │   │   └── _variables.scss     # SCSS variables
+│   │   ├── utils/
+│   │   │   └── ssr-styles.ts       # SSR utilities
+│   │   └── index.ts                # Public exports
+│   └── routes/                     # Demo routes
+├── dist/                           # Package output
+└── build/                          # Static site output
+
+SERVER-SIDE RENDERING SETUP
+----------------------------
+For optimal performance and SEO, set up SSR:
+
+src/routes/+layout.server.ts:
+import type { LayoutServerLoad } from './$types';
+import { generateInlineStyles } from '@keenmate/svelte-docs/utils';
+import { docsConfig } from '$lib/docs-config';
+
+export const load: LayoutServerLoad = async () => {
+  // Generate inline styles to prevent FOUC
+  const inlineStyles = generateInlineStyles(docsConfig);
+
+  return {
+    config: docsConfig,
+    inlineStyles
+  };
+};
+
+src/routes/+layout.svelte:
+<script lang="ts">
+  import '@keenmate/svelte-docs/styles/main.css';
+  import type { LayoutData } from './$types';
+
+  export let data: LayoutData;
+</script>
+
+<svelte:head>
+  {@html `<style>${data.inlineStyles}</style>`}
+</svelte:head>
+
+<slot />
+
+This eliminates Flash of Unstyled Content (FOUC).
+
+STATIC SITE GENERATION
+----------------------
+Configure for static output:
+
+svelte.config.js:
+import adapter from '@sveltejs/adapter-static';
+
+export default {
+  kit: {
+    adapter: adapter({
+      pages: 'build',
+      assets: 'build',
+      fallback: null,
+      precompress: false,
+      strict: true
+    })
+  }
+};
+
+Build:
+npm run build
+
+Output in build/ directory ready for deployment.
+
+SVELTE 5 STANDARDS
+------------------
+This library uses Svelte 5 with runes. Key patterns:
+
+RUNES:
+- $state - reactive state
+- $derived - computed values
+- $derived.by - computed with function
+- $effect - side effects
+
+ALWAYS use $derived.by for function-based derivations:
+✅ CORRECT:
+const fullName = $derived.by(() => {
+  return `${firstName} ${lastName}`;
+});
+
+❌ WRONG:
+const fullName = $derived(() => {
+  return `${firstName} ${lastName}`;
+});
+
+ACCESSING DERIVED VALUES:
+Access directly, no function call:
+<p>{fullName}</p>  <!-- Correct -->
+<p>{fullName()}</p>  <!-- Wrong -->
+
+SNIPPETS:
+Use snippets for content blocks:
+<DocLayout config={config}>
+  {#snippet children()}
+    <h1>Content</h1>
+  {/snippet}
+</DocLayout>
+
+PROPERTY NAMING CONVENTION
+---------------------------
+MANDATORY naming standards for all components:
+
+BOOLEAN PROPERTIES:
+✅ isVisible, hasChildren, canEdit, shouldRender
+❌ visible, children, edit, render
+
+TEXT PROPERTIES:
+✅ titleText, descriptionText, labelText
+❌ title, description, label
+
+TYPE/VARIANT PROPERTIES:
+✅ variantType, colorType, sizeType
+❌ variant, color, size
+
+COLLECTIONS:
+✅ navItems, childItems, buttonList
+❌ nav, children, buttons
+
+URLS:
+✅ linkHref, websiteUrl, imageUrl
+❌ link, website, image
+
+EXCEPTION:
+Svelte 5 reserved keywords like 'children' (for snippets) must remain unchanged.
+
+TYPESCRIPT USAGE
+----------------
+Full TypeScript support required:
+
+Import types:
+import type { DocsConfig, NavigationItem, ThemeConfig } from '@keenmate/svelte-docs';
+
+Type your config:
+const config: DocsConfig = { ... };
+
+Component props are fully typed.
+
+RESTRICTIONS & GUIDELINES
+--------------------------
+WHAT'S NOT ALLOWED:
+- Custom CSS files in user projects
+- HTML elements outside provided components
+- Modifying component internal structure
+- Breaking Bootstrap grid system
+- Arbitrary color/theme values outside config
+
+WHAT'S REQUIRED:
+- Follow property naming conventions
+- Use TypeScript interfaces
+- Work within component constraints
+- Maintain Bootstrap compatibility
+- Preserve responsive behavior
+
+This framework prioritizes consistency over flexibility.
+
+DESIGN PHILOSOPHY
+-----------------
+This is NOT a flexible UI kit.
+
+It's a RESTRICTIVE DOCUMENTATION FRAMEWORK where:
+- Users cannot add custom CSS or HTML
+- All styling is encapsulated within components
+- Only Bootstrap utility classes are allowed (limited)
+- Components have rigid internal structure
+- Configuration over customization approach
+
+Goal: Every documentation site looks professional and follows the same patterns.
+
+BOOTSTRAP 5.3 INTEGRATION
+--------------------------
+Uses Bootstrap CSS (not JS components):
+- Bootstrap classes available in components
+- Custom SCSS overrides in library
+- No Bootstrap JavaScript bundle needed
+- Only CSS framework used
+
+QUALITY ASSURANCE WORKFLOW
+---------------------------
+Before committing changes:
+
+1. TypeScript validation:
+   npm run check
+
+2. Build test:
+   npm run build
+
+3. Package test (if contributing):
+   npm run package
+
+4. Test in demo routes:
+   npm run dev
+   # Visit http://localhost:5173
+
+CROSS-PLATFORM SUPPORT
+----------------------
+Makefile provides cross-platform commands:
+- Windows-specific path operations handled
+- Use 'make dev', 'make build', 'make package' for convenience
+
+Or use npm commands directly (works everywhere):
+- npm run dev
+- npm run build
+- npm run package
+
+DEBUGGING
+---------
+Enable verbose output:
+- Check browser console for errors
+- Use Svelte DevTools (browser extension)
+- TypeScript errors shown by 'npm run check'
+
+Common issues:
+- Import errors: Check path to '@keenmate/svelte-docs'
+- Style not loading: Verify CSS import in layout
+- Config errors: Validate with validateConfig()
+
+NEXT STEPS
+----------
+After basic setup:
+
+1. Configure your site → See configuration.txt
+2. Learn available components → See components.txt
+3. Customize theme → See theming-styling.txt
+
+EXAMPLES
+--------
+Basic page:
+<script lang="ts">
+  import { DocLayout } from '@keenmate/svelte-docs';
+  import { docsConfig } from '$lib/docs-config';
+</script>
+
+<DocLayout config={docsConfig}>
+  <h1>My Page</h1>
+  <p>Content here</p>
+</DocLayout>
+
+Multiple pages with navigation:
+Config (docs-config.ts):
+navigation: {
+  main: [
+    { label: 'Home', href: '/' },
+    { label: 'Getting Started', href: '/getting-started' },
+    { label: 'Components', href: '/components' }
+  ]
+}
+
+Each route uses DocLayout with same config.
+
+CONTRIBUTING TO THE LIBRARY
+----------------------------
+If developing svelte-docs itself:
+
+1. Clone repository
+2. npm install
+3. npm run dev (starts demo site)
+4. Make changes in src/lib/
+5. npm run check (validate)
+6. npm run build:css (compile SCSS)
+7. npm run package (build library)
+8. Test in separate project
+
+PUBLISHING WORKFLOW:
+1. Update version in package.json
+2. npm run package
+3. make publish-dry (test)
+4. make publish (publish to NPM)
+
+VERSION COMPATIBILITY
+---------------------
+- Svelte 5: Full support with runes
+- Svelte 4: Compatible but missing runes features
+- SvelteKit 2: Required
+- TypeScript: Strongly recommended
+
+MIGRATION FROM OTHER FRAMEWORKS
+--------------------------------
+Coming from:
+- Docusaurus: More opinionated, less flexible
+- VitePress: SvelteKit-based instead of Vite
+- GitBook: Self-hosted, more control
+
+Key differences:
+- No markdown processing (use Svelte components)
+- Configuration-driven, not file-based
+- Svelte 5 component model
+- Bootstrap instead of custom CSS
+
+COMMON FIRST-TIME ISSUES
+-------------------------
+1. "Cannot find module '@keenmate/svelte-docs'"
+   → npm install @keenmate/svelte-docs
+
+2. "Styles not loading"
+   → Add import in +layout.svelte: import '@keenmate/svelte-docs/styles/main.css';
+
+3. "Type errors in config"
+   → Import types: import type { DocsConfig } from '@keenmate/svelte-docs';
+
+4. "Component not working"
+   → Check you're using Svelte 5 syntax with runes
+
+5. "Custom CSS not applying"
+   → This is by design. Use theme config instead.
+
+BEST PRACTICES
+--------------
+1. Keep config in separate file (docs-config.ts)
+2. Import CSS in root layout only
+3. Use TypeScript for type safety
+4. Follow naming conventions strictly
+5. Validate config with validateConfig()
+6. Test on multiple screen sizes
+7. Run 'npm run check' before committing
+8. Use provided components, don't create custom ones
+
+PERFORMANCE TIPS
+----------------
+- SSR eliminates FOUC
+- Static generation for best performance
+- Prerender all routes
+- Optimize images before using
+- Keep navigation structure simple
+- Limit visible months in components
+
+ACCESSIBILITY
+-------------
+Built-in features:
+- Semantic HTML structure
+- ARIA attributes on interactive elements
+- Keyboard navigation support
+- Responsive design
+- High contrast support (via theme config)
+
+DEPLOYMENT
+----------
+After 'npm run build':
+
+Static hosting (Netlify, Vercel, GitHub Pages):
+- Upload build/ directory
+- Configure as static site
+- No server required
+
+Server hosting:
+- Use SvelteKit adapter for your platform
+- Follow SvelteKit deployment guides
+
+CDN:
+- Upload to CDN after build
+- Serve build/ as static files
+
+SEO OPTIMIZATION
+----------------
+Configure in site metadata:
+{
+  site: {
+    title: 'My Docs',
+    description: 'SEO description',
+    keywords: ['docs', 'guide'],
+    ogImage: 'https://example.com/og.png',
+    twitterHandle: '@mycompany'
+  }
+}
+
+SSR ensures proper meta tags on all pages.
+
+ANALYTICS INTEGRATION
+---------------------
+Configure in features:
+{
+  features: {
+    analytics: {
+      gtag: 'GA-XXXXXXXXXX',           // Google Analytics
+      plausible: 'docs.example.com',    // Plausible
+      umami: {                          // Umami
+        url: 'https://analytics.example.com',
+        id: 'site-id'
+      }
+    }
+  }
+}
+
+Scripts injected automatically.
+
+TROUBLESHOOTING
+---------------
+Build fails:
+→ npm run check to see TypeScript errors
+
+Styles not applying:
+→ Verify CSS import in layout
+→ Check SCSS compilation (npm run build:css)
+
+Components not rendering:
+→ Check Svelte 5 syntax
+→ Verify config structure
+→ Check browser console
+
+Type errors:
+→ Import types correctly
+→ Match interface signatures
+→ Run npm run check
+
+FOUC (Flash of Unstyled Content):
+→ Implement SSR styles (see SSR section)
+
+RESOURCES
+---------
+- Configuration guide → configuration.txt
+- Component reference → components.txt
+- Styling guide → theming-styling.txt
+- Project instructions → ../CLAUDE.md
+- Type definitions → ../src/lib/types/config.ts
+- Example configs → ../src/lib/config/example.ts
