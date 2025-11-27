@@ -133,15 +133,8 @@ export interface FeaturesConfig {
   nextPrevious?: boolean;
   copyCode?: boolean;
   darkMode?: boolean;
-  /** Analytics */
-  analytics?: {
-    gtag?: string;
-    plausible?: string;
-    umami?: {
-      url: string;
-      id: string;
-    };
-  };
+  /** Array of script tags to inject in <head> for analytics (e.g., Plausible, Google Analytics, etc.) */
+  analyticsScripts?: string[];
   /** GitHub integration */
   github?: {
     repo: string;

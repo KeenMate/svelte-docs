@@ -219,6 +219,13 @@
   {#if activeConfig?.site?.url?.trim()}
     <link rel="canonical" href={activeConfig.site.url} />
   {/if}
+
+  <!-- Analytics Scripts -->
+  {#if activeConfig?.features?.analyticsScripts?.length}
+    {#each activeConfig.features.analyticsScripts as script}
+      {@html script}
+    {/each}
+  {/if}
 </svelte:head>
 
 <!-- Show configuration errors in development -->

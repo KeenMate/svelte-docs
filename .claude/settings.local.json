@@ -19,7 +19,8 @@
       "Read(//c/Git/KM/svelte-switch-showcase/**)",
       "Read(//c/Git/KM/svelte-spa-router-showcase/**)",
       "Bash(npm run build:css:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

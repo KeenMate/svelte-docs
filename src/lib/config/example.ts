@@ -150,9 +150,9 @@ export const advancedConfig: PartialDocsConfig = {
 		nextPrevious: true,
 		copyCode: true,
 		darkMode: true,
-		analytics: {
-			gtag: 'GA-XXXXXXXXXX'
-		},
+		analyticsScripts: [
+			'<script defer data-domain="docs.example.com" src="https://plausible.io/js/script.js"></script>'
+		],
 		github: {
 			repo: 'advancedcompany/advanced-docs',
 			branch: 'main',

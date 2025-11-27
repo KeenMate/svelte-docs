@@ -378,15 +378,8 @@ interface FeaturesConfig {
   copyCode?: boolean;               // Copy code button
   darkMode?: boolean;               // Dark mode toggle
 
-  // Analytics
-  analytics?: {
-    gtag?: string;                  // Google Analytics ID
-    plausible?: string;             // Plausible domain
-    umami?: {                       // Umami config
-      url: string;
-      id: string;
-    };
-  };
+  // Analytics (array of script tags to inject in <head>)
+  analyticsScripts?: string[];
 
   // GitHub integration
   github?: {
@@ -422,37 +415,25 @@ ENABLE ALL FEATURES:
   }
 }
 
-GOOGLE ANALYTICS:
+ANALYTICS SCRIPTS:
 {
   features: {
-    analytics: {
-      gtag: 'GA-XXXXXXXXXX'
-    }
+    analyticsScripts: [
+      '<script defer data-domain="docs.example.com" src="https://plausible.io/js/script.js"></script>'
+    ]
   }
 }
 
-Script injected: <script async src="https://www.googletagmanager.com/gtag/js?id=GA-XXX"></script>
+The analyticsScripts array accepts any script tags you need for analytics.
+Scripts are injected in <head> and rendered in the order provided.
 
-PLAUSIBLE ANALYTICS:
+MULTIPLE ANALYTICS PROVIDERS:
 {
   features: {
-    analytics: {
-      plausible: 'docs.example.com'
-    }
-  }
-}
-
-Script injected: <script defer data-domain="docs.example.com" src="https://plausible.io/js/script.js"></script>
-
-UMAMI ANALYTICS:
-{
-  features: {
-    analytics: {
-      umami: {
-        url: 'https://analytics.example.com',
-        id: 'your-site-id'
-      }
-    }
+    analyticsScripts: [
+      '<script defer data-domain="docs.example.com" src="https://plausible.io/js/script.js"></script>',
+      '<script async src="https://www.googletagmanager.com/gtag/js?id=GA-XXXXXXXXXX"></script>'
+    ]
   }
 }
 
@@ -564,9 +545,9 @@ export const docsConfig: DocsConfig = {
     nextPrevious: true,
     copyCode: true,
     darkMode: true,
-    analytics: {
-      plausible: 'docs.example.com'
-    },
+    analyticsScripts: [
+      '<script defer data-domain="docs.example.com" src="https://plausible.io/js/script.js"></script>'
+    ],
     github: {
       repo: 'mycompany/my-docs',
       branch: 'main',
@@ -713,9 +694,9 @@ export const docsConfig: DocsConfig = {
     url: dev ? 'http://localhost:5173' : 'https://docs.example.com'
   },
   features: {
-    analytics: dev ? {} : {
-      plausible: 'docs.example.com'
-    }
+    analyticsScripts: dev ? [] : [
+      '<script defer data-domain="docs.example.com" src="https://plausible.io/js/script.js"></script>'
+    ]
   }
 };
 
@@ -756,8 +737,8 @@ Theme not applying:
 → Verify theme config structure
 
 Analytics not tracking:
-→ Check correct format for analytics config
-→ Verify domain/ID is correct
+→ Check analyticsScripts array contains valid script tags
+→ Verify script tags are properly formatted strings
 
 BEST PRACTICES
 --------------

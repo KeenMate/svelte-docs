@@ -1,7 +1,7 @@
 {
 	"name": "@keenmate/svelte-docs",
 	"description": "A professional component library for building beautiful documentation and showcase sites with SvelteKit",
-	"version": "1.0.0-rc08",
+	"version": "1.0.0-rc09",
 	"type": "module",
 	"license": "MIT",
 	"author": "KeenMate",

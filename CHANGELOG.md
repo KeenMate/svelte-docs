@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc09] - 2025-11-27
+
+### Changed
+- **Simplified Analytics Configuration** - Replaced provider-specific analytics config with generic script injection
+  - Removed `analytics.gtag`, `analytics.plausible`, `analytics.umami` properties
+  - Added `analyticsScripts: string[]` - array of script tags to inject in `<head>`
+  - Supports any analytics provider without library changes
+  - Scripts rendered via `{@html}` in ConfigProvider's `svelte:head`
+
 ## [Unreleased]
 
 ### Added
