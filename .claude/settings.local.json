@@ -20,7 +20,8 @@
       "Read(//c/Git/KM/svelte-spa-router-showcase/**)",
       "Bash(npm run build:css:*)",
       "Bash(mkdir:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(npm audit fix:*)"
     ],
     "deny": [],
     "ask": []
