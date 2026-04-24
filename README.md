@@ -23,6 +23,21 @@ A professional component library for building beautiful documentation and showca
 npm install @keenmate/svelte-docs
 ```
 
+### Recommended: npm overrides for clean audits
+
+Two of our upstream dependencies — `@sveltejs/kit` (via `cookie`) and `mermaid` (via `uuid`) — still declare old versions of their transitive deps that npm flags in `npm audit`. The published advisories are low/moderate and the real-world impact in this library is negligible, but if you want a clean audit in your own project you'll need to replicate these overrides yourself (npm `overrides` are not inherited from dependencies — each top-level `package.json` needs its own):
+
+```json
+{
+  "overrides": {
+    "cookie": "^1.0.2",
+    "uuid": "^14.0.0"
+  }
+}
+```
+
+This forces the patched versions transitively. Both are API-compatible with the older versions for how `@sveltejs/kit` and `mermaid` use them. You can remove the overrides once upstream bumps its declared ranges.
+
 ### Import Styles
 
 You need to import the CSS styles in your app. You have several options:

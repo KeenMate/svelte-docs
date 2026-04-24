@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc11] - 2026-04-24 [PUBLISHED]
+
+### Security
+- **Resolved all npm audit vulnerabilities** (6 total: 4 low, 2 moderate)
+  - `cookie` — GHSA-pxg6-pf52-xh8x (out-of-bounds characters in cookie name/path/domain) via `@sveltejs/kit` transitive dep
+  - `uuid` — GHSA-w5hq-g745-h8pq (missing buffer bounds check in v3/v5/v6) via `mermaid` transitive dep
+
+### Changed
+- **Upgraded `mermaid`** from `^10.9.5` to `^11.14.0`
+- Added npm `overrides` in `package.json` to pin transitive vulnerable deps to patched versions:
+  - `cookie: ^1.0.2` (forces `@sveltejs/kit`'s transitive `cookie@0.6.0` up to `1.1.1`)
+  - `uuid: ^14.0.0` (forces `mermaid`'s transitive `uuid` up to `14.0.0`)
+- This approach avoids the destructive downgrades that `npm audit fix --force` would apply (which would install `@sveltejs/kit@0.0.30` and `mermaid@9.1.7`).
+
 ## [1.0.0-rc09] - 2025-11-27
 
 ### Changed

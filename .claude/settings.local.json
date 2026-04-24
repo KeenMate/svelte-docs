@@ -21,7 +21,11 @@
       "Bash(npm run build:css:*)",
       "Bash(mkdir:*)",
       "Bash(find:*)",
-      "Bash(npm audit fix:*)"
+      "Bash(npm audit fix:*)",
+      "Bash(npm list *)",
+      "Bash(npm view *)",
+      "Bash(git stash *)",
+      "Bash(npm audit *)"
     ],
     "deny": [],
     "ask": []
